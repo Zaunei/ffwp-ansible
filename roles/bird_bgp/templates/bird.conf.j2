@@ -102,17 +102,20 @@ template bgp internal {
 #Wegen OSPF wohl nicht benötigt:
 #        next hop self;
 
-#mach Dinge kaputt?!?
+#macht Dinge kaputt?!?
 #        gateway direct;
 #        direct;
 };
 
 # hier jeweils ein Eintrag zu jedem der anderen Gateways
 
+
 {% for host in groups['bgp'] %}
+{% if  hostvars[host]['inventory_hostname'] is not equalto inventory_hostname %}
 protocol bgp internal_{{ hostvars[host]['inventory_hostname'] }} from internal {
   neighbor {{ hostvars[host]['router_ip'] | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }} as {{ff_network.as_number}};
 };
+{% endif %}
 {% endfor %}
 
 
