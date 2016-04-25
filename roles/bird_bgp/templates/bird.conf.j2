@@ -57,6 +57,7 @@ protocol kernel kernel_ffrl {
         export filter {
             krt_prefsrc = ffrl_nat_address;
             if is_default() then accept;
+            reject;
         };
         table ffrl;
         kernel table 42;
@@ -90,21 +91,30 @@ protocol kernel kernel_ffwp {
 
 # ibgp zwischen den gateways
 template bgp internal {
+        table ffwp;
+        source address {{router_ip | ipaddr('address')}};
         local as {{ff_network.as_number}};
         import filter {
                 preference = 99;
                 accept;
         };
         export where source = RTS_BGP;
-        gateway direct;
-        direct;
-        next hop self;
+#Wegen OSPF wohl nicht benötigt:
+#        next hop self;
+
+#mach Dinge kaputt?!?
+#        gateway direct;
+#        direct;
 };
 
 # hier jeweils ein Eintrag zu jedem der anderen Gateways
-#protocol bgp gw_??? from internal {
-#        neighbor <IP-Adresse innerhalb des FF netztes, z.B. 10.43.0.4> as {{ff_network.as_number}};
-#};
+
+{% for host in groups['bgp'] %}
+protocol bgp internal_{{ hostvars[host]['inventory_hostname'] }} from internal {
+  neighbor {{ hostvars[host]['router_ip'] | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }} as {{ff_network.as_number}};
+};
+{% endfor %}
+
 
 
 # Uplink über ff Rheinland
