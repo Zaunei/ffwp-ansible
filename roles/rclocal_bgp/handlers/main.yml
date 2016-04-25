@@ -1,0 +1,4 @@
+---
+
+- name: restart rc.local
+  service: name=rc-local state=restarted

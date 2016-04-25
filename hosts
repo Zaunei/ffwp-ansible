@@ -1,0 +1,5 @@
+[bgp]
+bgp1 ansible_port=42227 ansible_host=bgp1.freifunk-westpfalz.de
+bgp2 ansible_port=22 ansible_host=bgp2.freifunk-westpfalz.de
+bgp3 ansible_port=22101 ansible_host=bgp3.freifunk-westpfalz.de
+bgp4 ansible_port=22101 ansible_host=bgp4.freifunk-westpfalz.de

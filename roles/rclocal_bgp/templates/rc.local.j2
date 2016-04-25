@@ -1,0 +1,69 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+#Router IP an lo binden
+#toDo: auslagern
+ip address add {{router_ip}} dev lo || true
+
+#Packete die in Tabelle 42 landen und für die es keine Route gibt kommen nicht weiter (wichtig)
+ip route add unreachable default metric 1337 table 42 || true
+
+#Markierte Packete versuchen intern loszuwerden
+ip rule add from all fwmark 0x1 table 40 priority 40 || true
+#dann über ICVPN bzw. DN42
+ip rule add from all fwmark 0x1 table 41 priority 41 || true
+#Was übrig bleibt versuchen über Exit loszuwerden
+ip rule add from all fwmark 0x1 table 42 priority 42 || true
+#Um auch von dieser VM auf interne Ziele z.B pingen zu können
+#ip rule add from all table 43 priority 43|| true
+
+#schicke Uplink keine Packete mit dennen er nichts anfangen können
+#https://en.wikipedia.org/wiki/Reserved_IP_addresses
+#blocke private Adressbereiche (RFC1918)
+ip route add unreachable 10.0.0.0/8 table 42 || true
+ip route add unreachable 172.16.0.0/12 table 42 || true
+ip route add unreachable 192.168.0.0/16 table 42 || true
+#blocke Carrier-grade NAT Adressbereich (RFC6598)
+ip route add unreachable 100.64.0.0/10 table 42 || true
+#blocke Multicast Adressbereich
+ip route add unreachable 224.0.0.0/3 table 42 || true
+#blocke Reserved Adressbereich
+ip route add unreachable 240.0.0.0/4 table 42 || true
+#blocke Loopback Adressbereich
+ip route add unreachable 127.0.0.0/8 table 42 || true
+#blocke Documentation Adressbereich
+ip route add unreachable 192.0.0.0.0/24 table 42 || true
+ip route add unreachable 198.51.100.0/24 table 42 || true
+ip route add unreachable 203.0.113.0/24 table 42 || true
+
+
+#verhindert dass Packete an private IP Ranges über default Route (eth0) gehen
+#blocke private Adressbereiche (RFC1918)
+ip route add unreachable 10.0.0.0/8 table main || true
+ip route add unreachable 172.16.0.0/12 table main || true
+ip route add unreachable 192.168.0.0/16 table main || true
+#blocke Carrier-grade NAT Adressbereich (RFC6598)
+ip route add unreachable 100.64.0.0/10 table main || true
+#blocke Multicast Adressbereich
+ip route add unreachable 224.0.0.0/3 table main || true
+#blocke Reserved Adressbereich
+ip route add unreachable 240.0.0.0/4 table main || true
+#blocke Loopback Adressbereich
+ip route add unreachable 127.0.0.0/8 table main || true
+#blocke Documentation Adressbereich
+ip route add unreachable 192.0.0.0.0/24 table main || true
+ip route add unreachable 198.51.100.0/24 table main || true
+ip route add unreachable 203.0.113.0/24 table main || true
+
+
+exit 0

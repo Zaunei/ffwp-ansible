@@ -1,0 +1,58 @@
+---
+
+- name: Fire all previous handlers
+  meta: flush_handlers
+
+- name: Schlüssel für Bird hinzufügen
+  #wget -O - http://bird.network.cz/debian/apt.key | gpg --with-key-data
+  apt_key: id=AC0E47584A7A714D url=http://bird.network.cz/debian/apt.key state=present
+
+- name: Bird-Repo hinzufügen
+  apt_repository:
+        #Bei Problemen ggf. auf jessie aendern
+        repo: "deb http://bird.network.cz/debian/ {{ ansible_distribution_release }} main"
+        state: present
+
+- name: Bird installieren
+  apt:
+        pkg: "{{item}}"
+        update_cache: yes
+        state: installed
+  with_items:
+        - bird
+        - bird6
+
+
+- name: Routingtabelle 40 auch ffwp nennen
+  lineinfile: dest="/etc/iproute2/rt_tables" line="40   ffwp"
+
+- name: Routingtabelle 41 auch icvpn nennen
+  lineinfile: dest="/etc/iproute2/rt_tables" line="41   icvpn"
+
+- name: Routingtabelle 42 auch inetexit nennen
+  lineinfile: dest="/etc/iproute2/rt_tables" line="42   inetexit"
+
+- name: Routingtabelle 43 auch icvpn nennen
+  lineinfile: dest="/etc/iproute2/rt_tables" line="43   debug"
+
+- name: configure bird.conf
+  template: src=bird.conf.j2 dest=/etc/bird/bird.conf
+  notify:
+    - restart bird
+#
+# - name: configure bird6.conf
+#   template: src=bird6.conf.j2 dest=/etc/bird/bird6.conf
+#   notify:
+#    - restart bird6
+
+- name: bird aktivieren und starten
+  service: name=bird state=started enabled=yes
+
+#- name: bird6 aktivieren und starten
+#  service: name=bird6 state=started enabled=yes
+
+- name: Aktiviere IPv4 Forwarding
+  sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes
+
+- name: Aktiviere IPv6 Forwarding
+  sysctl: name="net.ipv6.conf.all.forwarding" value=1 sysctl_set=yes state=present reload=yes

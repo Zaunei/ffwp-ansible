@@ -1,0 +1,135 @@
+log syslog all;
+#Router ID (hier v4)
+router id {{router_ip | ipaddr('address')}};
+
+#interne BIRD Routing-Tabelle
+table ffrl;
+table ffwp;
+
+define ffrl_nat_address = {{server_ipv4_nat| ipaddr('address')}};
+
+function is_ffrl_nat() {
+    return net ~ [
+        {{server_ipv4_nat | ipaddr('address')}}/32
+    ];
+}
+
+function is_default() {
+        return (net ~ [0.0.0.0/0]);
+};
+
+#toDo: /31 Transfernetze
+function is_ffrl_tunnel_nets() {
+    return net ~ [
+    100.0.0.0/8+
+    ];
+}
+
+# BGP Import Filter für Rheinland
+filter ebgp_ffrl_import_filter {
+    if is_default() then accept;
+    reject;
+}
+
+# BGP Export Filter für Rheinland
+filter ebgp_ffrl_export_filter {
+    if is_ffrl_nat() then accept;
+    reject;
+}
+
+# IP-NAT-Adresse legen wir in die interne BIRD Routing Table
+protocol static ffrl_uplink_hostroute {
+    table ffrl;
+    route {{server_ipv4_nat | ipaddr('address')}}/32 reject;
+}
+
+protocol direct {
+        table ffrl;
+        interface "ffrl_*";
+        import where is_ffrl_tunnel_nets();
+};
+
+# Wir exportieren über Rheinland gelernte Routen in die Kernel Table 42 (ffinetexit)
+protocol kernel kernel_ffrl {
+        scan time 10;
+        import none;
+        #Source Adresse umschreiben
+        export filter {
+            krt_prefsrc = ffrl_nat_address;
+            if is_default() then accept;
+        };
+        table ffrl;
+        kernel table 42;
+};
+
+protocol device {
+        scan time 10;
+};
+
+
+protocol ospf IGP {
+  area 0 {
+        interface "ffwp_*";
+        interface "lo"{
+                 stub;};
+  };
+        table ffwp;
+        import all;
+        #Keine Routen von anderen Quellen per OSPF propagieren
+        export none;
+}
+
+protocol kernel kernel_ffwp {
+        scan time 10;
+        import none;
+        #Source Adresse umschreiben? Filtern?
+        export all;
+        table ffwp;
+#        kernel table 40;
+};
+
+# ibgp zwischen den gateways
+template bgp internal {
+        local as {{ff_network.as_number}};
+        import filter {
+                preference = 99;
+                accept;
+        };
+        export where source = RTS_BGP;
+        gateway direct;
+        direct;
+        next hop self;
+};
+
+# hier jeweils ein Eintrag zu jedem der anderen Gateways
+#protocol bgp gw_??? from internal {
+#        neighbor <IP-Adresse innerhalb des FF netztes, z.B. 10.43.0.4> as {{ff_network.as_number}};
+#};
+
+
+# Uplink über ff Rheinland
+template bgp ffrl_uplink {
+        table ffrl;
+        local as {{ff_network.as_number}};
+        import keep filtered;
+        import filter ebgp_ffrl_import_filter;
+        export filter ebgp_ffrl_export_filter;
+        next hop self;
+        direct;
+#        multihop 64;
+#        default bgp_local_pref 200;
+};
+
+#mit local_pref ggf. Uplinks bevorzugen
+# Todo: durch das /31 funktioniert ipaddr() nicht korrekt, klären, ob /31 in der config entfernt werden kann und dann regex entfernen
+{% for gre in ffrl_gre %}
+protocol bgp ffrl_{{gre.name}} from ffrl_uplink {
+  source address {{gre.v4_local | ipaddr('address')}};
+  neighbor {{gre.v4_remote | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1")}} as 201701;
+{#{% if loop.first %}
+  default bgp_local_pref 201;
+  default bgp_med 1;
+{% endif %}#}
+};
+
+{% endfor %}
