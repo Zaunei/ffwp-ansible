@@ -2,7 +2,7 @@
 
 # GRE Tunnel zwischen BGP VMs
 # - Die Konfigurationsdaten werden vorher vergeben und zugewiesen
-# Regex gegen ipaddr('address') austauschen sobald /31 damit funktionieren
+# Regex gegen ipaddr('address') austauschen sobald /31 damit funktioniert
 {% for gre in ffwp_bgp_gre %}
 
 # GRE Tunnel to ffwp_{{gre.name}} ({{gre.v4_local | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }})

@@ -33,7 +33,7 @@
 - name: Create interfaces - gre to ffwp_gre
   template: src="gre_ffwp_bgp.j2" dest="/etc/network/interfaces.d/39_gre_ffwp_bgp.cfg"
   notify:
-#    - restart networking
+    - restart networking
 
 #append line in interfaces file for reading additional config files
 - name: let read interfaces from interfaces

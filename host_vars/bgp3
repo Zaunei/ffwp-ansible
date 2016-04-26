@@ -21,6 +21,11 @@ ff_network:
    #Noch gegen v6 /64 Client Netz ersetzen
   # v6_network: 2a03:2260:100d::/48
 
+ffwp_direct_gw:
+- interface: eth1
+  v4_network: 10.198.120.144/31
+  v6_network:
+
 #GRE-Einstellungen zum Freifunk Rheinland
 #+1 auf Rheinland IP = unsere IP
 ffrl_gre:
