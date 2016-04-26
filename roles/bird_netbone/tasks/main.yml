@@ -1,0 +1,29 @@
+---
+
+- name: Routingtabelle 40 auch ffwp nennen
+  lineinfile: dest="/etc/iproute2/rt_tables" line="40   ffwp"
+
+- name: Routingtabelle 41 auch icvpn nennen
+  lineinfile: dest="/etc/iproute2/rt_tables" line="41   icvpn"
+
+- name: Routingtabelle 42 auch inetexit nennen
+  lineinfile: dest="/etc/iproute2/rt_tables" line="42   inetexit"
+
+- name: Routingtabelle 43 auch icvpn nennen
+  lineinfile: dest="/etc/iproute2/rt_tables" line="43   debug"
+
+- name: configure bird.conf
+  template: src=bird.conf.j2 dest=/etc/bird/bird.conf
+  notify:
+#    - restart bird
+#
+# - name: configure bird6.conf
+#   template: src=bird6.conf.j2 dest=/etc/bird/bird6.conf
+#   notify:
+#    - restart bird6
+
+- name: bird aktivieren und starten
+  service: name=bird state=started enabled=yes
+
+#- name: bird6 aktivieren und starten
+#  service: name=bird6 state=started enabled=yes

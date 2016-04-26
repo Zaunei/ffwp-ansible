@@ -5,6 +5,7 @@
   notify:
     - restart rc.local
 
+#Beachten dass alte Einträge nicht angefasst werden
 - name: rc.local aktivieren und starten
   service: name=rc.local state=started enabled=yes
 

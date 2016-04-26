@@ -9,5 +9,6 @@
     - { role: common, tags: "common"}
     - { role: rclocal_bgp, tags: "rclocal_bgp"}
     - { role: interfaces_ffrl, tags: "interfaces_ffrl"}
-    - { role: bird_bgp, tags: "bird_bgp"}
     - { role: interfaces_bgp, tags: "interfaces_bgp"}
+    - { role: install_bird, tags: "install_bird"}
+    - { role: bird_netbone, tags: "bird_netbone"}
