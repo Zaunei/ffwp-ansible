@@ -1,4 +1,4 @@
-# Variablen der Routing VM BGP2 (vm1020)
+# Variablen der Routing VM BGP2 (vm1027)
 # Die Server-IP-Adresse wird durch von Ansible bereitgestellte Variablen abgerufen (ansible_eth0.ipv4...)
 
 # ID des Servers.
@@ -7,7 +7,7 @@
 #vm_id: 2
 #server_besitzer: "Jan Gilla / Xermon"
 public_v4: 5.9.252.107
-public_v6: 2001:470:6d:104:a94b:b411:5599:772e
+public_v6:
 # IPv4 Adresse auf die der Datenverkehr per NAT umgestetzt wird
 # Nur für Backbone-Server notwendig
 router_ip: 10.198.120.17/32
