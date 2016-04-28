@@ -42,6 +42,7 @@
     - iperf
     - mtr
     - iptables-persistent
+    - mosh
 
 - name: create user freifunk
   user: name=freifunk shell=/bin/bash
