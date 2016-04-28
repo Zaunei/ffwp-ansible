@@ -7,6 +7,7 @@
   roles:
     - { role: hostname, tags: "hostname"}
     - { role: common, tags: "common"}
+    - { role: iptables_netbone, tags: "iptables_netbone"}
     - { role: rclocal_netbone, tags: "rclocal_netbone"}
     - { role: interfaces_netbone_ffrl, tags: "interfaces_netbone_ffrl"}
     - { role: interfaces_netbone_interconnect, tags: "interfaces_netbone_interconnect"}

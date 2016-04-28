@@ -41,6 +41,7 @@
     - git
     - iperf
     - mtr
+    - iptables-persistent
 
 - name: create user freifunk
   user: name=freifunk shell=/bin/bash
