@@ -40,6 +40,7 @@
 #    - molly-guard
     - git
     - iperf
+    - iperf3
     - mtr
     - iptables-persistent
     - mosh
