@@ -9,10 +9,11 @@ COMMIT
 :INPUT ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
--A POSTROUTING -o ffrl_+ -j SNAT --to-source {{server_ipv4_nat | ipaddr('address')}}
+-A POSTROUTING -s 10.198.0.0/16 -o ffrl_+ -j SNAT --to-source {{server_ipv4_nat | ipaddr('address')}}
 COMMIT
 *mangle
 :PREROUTING ACCEPT [0:0]
+-A PREROUTING -i eth1 -j MARK --set-xmark 0x1/0xffffffff
 :INPUT ACCEPT [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
