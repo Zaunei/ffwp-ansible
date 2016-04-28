@@ -18,14 +18,18 @@ ip address add {{router_ip}} dev lo || true
 #Packete die in Tabelle 42 landen und für die es keine Route gibt kommen nicht weiter (wichtig)
 ip route add unreachable default metric 1337 table 42 || true
 
+
+#Ausgehende Pakete die über Exit sollen mit Source IP matchen und in richtige Tabelle schieben
+#sonst würden z.B ICMP Echo-Replys über normale Default route gehen
+ip -4 rule add from {{server_ipv4_nat}} table 42 priority 39 || true
 #Markierte Packete versuchen intern loszuwerden
-ip rule add from all fwmark 0x1 table 40 priority 40 || true
+ip -4 rule add from all fwmark 0x1 table 40 priority 40 || true
 #dann über ICVPN bzw. DN42
-ip rule add from all fwmark 0x1 table 41 priority 41 || true
+ip -4 rule add from all fwmark 0x1 table 41 priority 41 || true
 #Was übrig bleibt versuchen über Exit loszuwerden
-ip rule add from all fwmark 0x1 table 42 priority 42 || true
+ip -4 rule add from all fwmark 0x1 table 42 priority 42 || true
 #Um auch von dieser VM auf interne Ziele z.B pingen zu können
-#ip rule add from all table 43 priority 43|| true
+#ip -4 rule add from all table 43 priority 43|| true
 
 #schicke Uplink keine Packete mit dennen er nichts anfangen können
 #https://en.wikipedia.org/wiki/Reserved_IP_addresses
