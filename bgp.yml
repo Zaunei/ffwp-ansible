@@ -12,5 +12,5 @@
     - { role: interfaces_netbone_ffrl, tags: "interfaces_netbone_ffrl"}
     - { role: interfaces_netbone_interconnect, tags: "interfaces_netbone_interconnect"}
     - { role: interfaces_netbone_direct_gw, tags: "interfaces_netbone_direct_gw"}
-    - { role: bird_netbone, tags: "bird_netbone"}
     - { role: bird_install, tags: "bird_install"}
+    - { role: bird_netbone, tags: "bird_netbone"}
