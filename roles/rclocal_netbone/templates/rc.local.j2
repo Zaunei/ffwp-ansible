@@ -36,11 +36,14 @@ ip -4 rule add from all fwmark 0x2 table 40 priority 43 || true
 #wenn nicht, versuchen bei anderen Communities loswerden
 ip -4 rule add from all fwmark 0x2 table 41 priority 44 || true
 #wenn immernoch kein Ziel gefunden unreachable
-ip rule add unreachable from all fwmark 0x2 priority 45 || true
+ip -4 rule add unreachable from all fwmark 0x2 priority 45 || true
 
 #Optional, aber doppelt hält besser:
-ip rule add unreachable from all fwmark 0x1 priority 46 || true
+ip -4 rule add unreachable from all fwmark 0x1 priority 46 || true
 #ggf. noch etwas was nicht auf fwmark basiert implementieren?
+
+#Debug Tabelle
+ip -4 rule add from all table 43 priority 47 || true
 
 #schicke Uplink keine Packete mit dennen er nichts anfangen können
 #https://en.wikipedia.org/wiki/Reserved_IP_addresses

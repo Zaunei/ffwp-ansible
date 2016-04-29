@@ -9,6 +9,7 @@ auto {{direct.interface}}
 iface {{direct.interface}} inet static
         address {{direct.v4_network | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }}
         netmask {{direct.v4_network| ipaddr('netmask')}}
+        post-up ip link set $IFACE mtu 1400
 #        post-up ip rule add iif $IFACE lookup ??
 #        pre-down ip rule del iif $IFACE lookup ??
 {#
