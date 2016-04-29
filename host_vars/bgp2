@@ -7,7 +7,7 @@
 #vm_id: 2
 #server_besitzer: "Jan Gilla / Xermon"
 public_v4: 5.9.252.107
-public_v6:
+public_v6: 2a01:4f8:160:9450:1::7
 # IPv4 Adresse auf die der Datenverkehr per NAT umgestetzt wird
 # Nur für Backbone-Server notwendig
 router_ip: 10.198.120.17/32
