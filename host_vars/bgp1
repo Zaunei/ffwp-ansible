@@ -66,7 +66,7 @@ ffrl_gre:
   v6_local: 2a03:2260:0:280::2/64
   v6_remote: 2a03:2260:0:280::1/64
 
-ffwp_bgp_gre:
+internal_gre:
 - name: bgp1to2
   gre_target: "{{ hostvars['bgp2']['public_v4'] }}"
   v4_local: 10.198.120.128/31

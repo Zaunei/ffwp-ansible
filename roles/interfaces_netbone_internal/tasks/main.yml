@@ -30,8 +30,8 @@
 
 
 # creating gre tunnels to FFWP Backbone
-- name: Create interfaces - gre to ffwp_gre
-  template: src="gre_ffwp_bgp.j2" dest="/etc/network/interfaces.d/39_gre_ffwp_bgp.cfg"
+- name: Create interfaces - internal_gre
+  template: src="internal_gre.j2" dest="/etc/network/interfaces.d/39_internal_gre.cfg"
   notify:
     - restart networking
 

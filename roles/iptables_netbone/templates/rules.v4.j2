@@ -2,6 +2,10 @@
 *filter
 :INPUT ACCEPT [0:0]
 :FORWARD ACCEPT [0:0]
+-A FORWARD -i eth1 -o ffrl+ -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+-A FORWARD -i ffrl+ -o eth1 -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+-A FORWARD -i ffwp+ -o ffrl+ -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+-A FORWARD -i ffrl+ -o ffwp+ -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 :OUTPUT ACCEPT [0:0]
 COMMIT
 *nat
@@ -9,16 +13,17 @@ COMMIT
 :INPUT ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
--A POSTROUTING -s 10.198.0.0/16 -o ffrl_+ -j SNAT --to-source {{server_ipv4_nat | ipaddr('address')}}
+-A POSTROUTING -s {{ff_network.v4_network}} -o ffrl_+ -j SNAT --to-source {{server_ipv4_nat | ipaddr('address')}}
 COMMIT
 *mangle
 :PREROUTING ACCEPT [0:0]
 -A PREROUTING -i eth1 -j MARK --set-xmark 0x1/0xffffffff
+-A PREROUTING -i ffwp+ -j MARK --set-xmark 0x1/0xffffffff
+-A PREROUTING -i icvpn+ -j MARK --set-xmark 0x2/0xffffffff
 :INPUT ACCEPT [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
 #-A OUTPUT -o eth0 -p udp -m udp --dport 53 -j MARK --set-xmark 0x1/0xffffffff
 #-A OUTPUT -o eth0 -p tcp -m tcp --dport 53 -j MARK --set-xmark 0x1/0xffffffff
--A POSTROUTING -o ffrl_+ -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --set-mss 1280
 COMMIT

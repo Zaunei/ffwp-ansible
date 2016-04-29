@@ -3,11 +3,11 @@
 # GRE Tunnel zwischen BGP VMs
 # - Die Konfigurationsdaten werden vorher vergeben und zugewiesen
 # Regex gegen ipaddr('address') austauschen sobald /31 damit funktioniert
-{% for gre in ffwp_bgp_gre %}
+{% for gre in internal_gre %}
 
-# GRE Tunnel to ffwp_{{gre.name}} ({{gre.v4_local | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }})
-auto ffwp_{{gre.name}}
-iface ffwp_{{gre.name}} inet static
+# GRE Tunnel to int_{{gre.name}} ({{gre.v4_local | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }})
+auto int_{{gre.name}}
+iface int_{{gre.name}} inet static
         address {{gre.v4_local | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }}
         netmask {{gre.v4_local | ipaddr('netmask')}}
         pre-up ip tunnel add $IFACE mode gre local {{ansible_default_ipv4.address}} remote {{gre.gre_target | ipaddr('address') }} ttl 255
@@ -16,7 +16,7 @@ iface ffwp_{{gre.name}} inet static
 #        post-up ip rule add iif $IFACE lookup 40
 #        pre-down ip rule del iif $IFACE lookup 40
 {#
-iface ffwp_{{gre.name}} inet6 static
+iface int_{{gre.name}} inet6 static
         address {{gre.v6_local}}
         netmask {{gre.v6_local | ipaddr('prefix')}}
         post-up ip -6 rule add iif $IFACE lookup 40
