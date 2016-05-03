@@ -7,7 +7,7 @@
 #vm_id: 3
 #server_besitzer: "KiBo"
 public_v4: 193.111.140.173
-#public_v6:
+public_v6: 2001:4ba0:ffef:2::101
 # IPv4 Adresse auf die der Datenverkehr per NAT umgestetzt wird
 # Nur für Backbone-Server notwendig
 router_ip: 10.198.120.33/32
@@ -68,19 +68,19 @@ ffrl_gre:
 
 internal_gre:
 - name: bgp3to1
-  gre_target: "{{ hostvars['bgp1']['public_v4'] }}"
+  gre_target: "{{ hostvars['bgp1']['public_v6'] }}"
   v4_local: 10.198.120.131/31
   v4_remote: 10.198.120.130/31
   #v6_local:
   #v6_remote:
 - name: bgp3to2
-  gre_target: "{{ hostvars['bgp2']['public_v4'] }}"
+  gre_target: "{{ hostvars['bgp2']['public_v6'] }}"
   v4_local: 10.198.120.135/31
   v4_remote: 10.198.120.134/31
   #v6_local:
   #v6_remote:
 - name: bgp3to4
-  gre_target: "{{ hostvars['bgp4']['public_v4'] }}"
+  gre_target: "{{ hostvars['bgp4']['public_v6'] }}"
   v4_local: 10.198.120.138/31
   v4_remote: 10.198.120.139/31
   #v6_local:

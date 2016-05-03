@@ -7,7 +7,7 @@
 #vm_id: 1
 #server_besitzer: "C3KL"
 public_v4: 78.46.88.72
-#public_v6:
+public_v6: 2a01:4f8:120:2192:affe::6
 # IPv4 Adresse auf die der Datenverkehr per NAT umgestetzt wird
 # Nur für Backbone-Server notwendig
 router_ip: 10.198.120.1/32
@@ -68,19 +68,19 @@ ffrl_gre:
 
 internal_gre:
 - name: bgp1to2
-  gre_target: "{{ hostvars['bgp2']['public_v4'] }}"
+  gre_target: "{{ hostvars['bgp2']['public_v6'] }}"
   v4_local: 10.198.120.128/31
   v4_remote: 10.198.120.129/31
   #v6_local:
   #v6_remote:
 - name: bgp1to3
-  gre_target: "{{ hostvars['bgp3']['public_v4'] }}"
+  gre_target: "{{ hostvars['bgp3']['public_v6'] }}"
   v4_local: 10.198.120.130/31
   v4_remote: 10.198.120.131/31
   #v6_local:
   #v6_remote:
 - name: bgp1to4
-  gre_target: "{{ hostvars['bgp4']['public_v4'] }}"
+  gre_target: "{{ hostvars['bgp4']['public_v6'] }}"
   v4_local: 10.198.120.132/31
   v4_remote: 10.198.120.133/31
   #v6_local:

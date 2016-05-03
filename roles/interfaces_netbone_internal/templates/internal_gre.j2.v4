@@ -10,7 +10,7 @@ auto int_{{gre.name}}
 iface int_{{gre.name}} inet static
         address {{gre.v4_local | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }}
         netmask {{gre.v4_local | ipaddr('netmask')}}
-        pre-up ip -6 tunnel add $IFACE mode ip6gre remote {{gre.gre_target | ipaddr('address') }} local {{ansible_default_ipv6.address}} ttl 255
+        pre-up ip tunnel add $IFACE mode gre local {{ansible_default_ipv4.address}} remote {{gre.gre_target | ipaddr('address') }} ttl 255
         post-up ip link set $IFACE mtu 1400
         post-down ip tunnel del $IFACE
 #        post-up ip rule add iif $IFACE lookup 40
