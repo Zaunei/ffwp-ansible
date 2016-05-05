@@ -102,9 +102,8 @@ protocol kernel kernel_ffwp {
   #Auch Device Routen in Tabelle eintragen da benötigt und durch rules kein kontakt zur Main Routing Tabelle
   device routes;
   import none;
-  #Source Adresse umschreiben?
   export filter {
-    #            krt_prefsrc = router_ip;
+    krt_prefsrc = router_ip;
     if is_ffwp() then accept;
     reject;
   };
@@ -131,9 +130,8 @@ protocol kernel kernel_interior {
   #Auch Device Routen in Tabelle eintragen da benötigt und durch rules kein Kontakt zur Main Routing Tabelle
   device routes;
   import none;
-  #Source Adresse umschreiben? Filtern?
   export filter {
-    # krt_prefsrc = router_ip;
+    krt_prefsrc = router_ip;
     #Default Routen nicht erwünscht, Rest aufnehmen
     if is_default() then reject;
     accept;
