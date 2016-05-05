@@ -42,8 +42,12 @@ ip -4 rule add unreachable from all fwmark 0x2 priority 45 || true
 ip -4 rule add unreachable from all fwmark 0x1 priority 46 || true
 #ggf. noch etwas was nicht auf fwmark basiert implementieren?
 
-#Debug Tabelle
-ip -4 rule add from all table 43 priority 47 || true
+#interne FFWP Routen auch dem System zugänglich machen
+ip -4 rule add from all table 40 priority 47 || true
+#ICVPN Routen auch dem System zugänglich machen
+ip -4 rule add from all table 41 priority 48 || true
+#Damit OSPF funktioniert alle Routen bis auf Default Routen
+ip -4 rule add from all table 43 priority 49 || true
 
 #schicke Uplink keine Packete mit dennen er nichts anfangen können
 #https://en.wikipedia.org/wiki/Reserved_IP_addresses
