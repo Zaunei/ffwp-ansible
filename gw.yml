@@ -1,0 +1,12 @@
+---
+# Playbook zur Konfiguration aller Servern von domaene-01
+# Aufruf einer einzelnen Rolle möglich. Beispiel nur fastd: "ansible-playbook bgp.yml --tags="common"
+
+- hosts: gw
+  remote_user: root
+  roles:
+#    - { role: hostname, tags: "hostname"}
+#    - { role: common, tags: "common"}
+#    - { role: iptables_gw, tags: "iptables_gw"}
+    - { role: bird_install, tags: "bird_install"}
+    - { role: bird_gw, tags: "bird_gw"}

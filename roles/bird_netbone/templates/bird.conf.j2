@@ -42,7 +42,6 @@ protocol device {
         scan time 10;
 };
 
-
 #Kopiere gelernte Routen aus FFRL in Main Tabelle
 protocol pipe pipe_main_ffrl {
   peer table ffrl;
@@ -149,13 +148,15 @@ protocol ospf IGP {
         interface "int_*";
         interface "eth1";
         stubnet router_ip/32;
+        #Default Route
+        stubnet 0.0.0.0/0;
   };
         stub router no;         # Box macht ggf. auch Transit-Traffic
         ecmp no;                # Kein Equal-Cost-Multipath, um Problemen mit unterschiedlichen
                                 # Uplinks aus dem Weg zu gehen
         table interior;
         import keep filtered;
-        #Wir wollen alles bis auf Default Routen
+        #Wir wollen alles bis auf Default Routen importieren
         import filter{
           if is_default() then reject;
           accept;
@@ -196,7 +197,7 @@ template bgp internal {
         };
         export where source = RTS_BGP;
         next hop self;
-#von vielen Communitys benutzt macht hier aber Dinge kaputt
+#von vielen Communitys benutzt macht hier aber Dinge kaputt, wegen OSPF wohl multihop
 #        gateway direct;
 #        direct;
 };

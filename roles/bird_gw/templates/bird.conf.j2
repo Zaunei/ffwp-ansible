@@ -1,0 +1,84 @@
+log syslog all;
+#Router ID (hier v4)
+router id {{router_ip | ipaddr('address')}};
+
+#interne BIRD Routing-Tabelle
+table freifunk;
+table mainkernel;
+
+define router_ip = {{router_ip | ipaddr('address')}};
+
+function is_default() {
+        return (net ~ [0.0.0.0/0]);
+};
+
+function is_ffwp() {
+	return (net ~ [10.198.0.0/16+]);
+};
+
+#Alles von Bird Main Tabelle in Freifunk Tabelle kopieren
+protocol pipe pipe_main_freifunk {
+  peer table freifunk;
+  import none;
+  export all;
+};
+
+#Alles bis auf Default Routen von Bird Main Tabelle in mainkernel Tabelle kopieren
+protocol pipe pipe_main_mainkernel {
+  peer table mainkernel;
+  import none;
+  export filter{
+    if is_default() then reject;
+    accept;
+  };
+};
+
+protocol device {
+        scan time 10;
+};
+
+#Alles inkl Default Routen von OSPF übernehem in Bird Main Tabelle
+#Eigene Netze über OSPF propagieren
+protocol ospf IGP {
+  area 0 {
+        interface "ffwp_*";
+	interface "eth1";
+	#Clientnetz als ganzes
+	stubnet {{ff_network.v4_network}};
+	#DHCP Range
+	stubnet {{gw_subnet}};
+	};
+  import all;
+#	import filter {
+#    		if !is_default() then accept;
+#        reject;};
+        #Keine Routen von anderen Quellen per OSPF propagieren
+	export none;
+
+};
+
+#Schreibe alles von Bird Freifunk Tabelle in Kernel Tabelle Freifunk (inkl. Default Routen)
+protocol kernel kernel_freifunk {
+        scan time 10;
+        #Auch Device Routen in Tabelle eintragen da benötigt und durch rules kein kontakt zur Main Routing Tabelle
+        device routes;
+        import none;
+        #Source Adresse umschreiben? Filtern?
+        export all;
+        table freifunk;
+        kernel table 42;
+};
+
+#Schreibe alles bis auf Default Routen von Bird mainkernel Tabelle in Kernel Tabelle Freifunk
+protocol kernel kernel_mainkernel {
+        scan time 10;
+        #Auch Device Routen in Tabelle eintragen da benötigt und durch rules kein kontakt zur Main Routing Tabelle
+        device routes;
+        import none;
+        #Source Adresse umschreiben? Filtern?
+        export filter{
+          if is_default() then reject;
+          accept;
+        };
+        table mainkernel;
+};
