@@ -37,6 +37,12 @@ protocol device {
         scan time 10;
 };
 
+#FFWP Bridge auch in Freifunk Tabelle setzen
+protocol direct ffwp_bridge {
+        interface "br-ffwp";
+        table freifunk;
+}
+
 #Alles inkl Default Routen von OSPF übernehem in Bird Main Tabelle
 #Eigene Netze über OSPF propagieren
 protocol ospf IGP {
@@ -69,7 +75,7 @@ protocol kernel kernel_freifunk {
         kernel table 42;
 };
 
-#Schreibe alles bis auf Default Routen von Bird mainkernel Tabelle in Kernel Tabelle Freifunk
+#Schreibe alles bis auf Default Routen von Bird mainkernel Tabelle in Main Kernel Tabelle
 protocol kernel kernel_mainkernel {
         scan time 10;
         #Auch Device Routen in Tabelle eintragen da benötigt und durch rules kein kontakt zur Main Routing Tabelle
