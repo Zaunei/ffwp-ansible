@@ -10,10 +10,6 @@ table icvpn;
 table ffrl;
 table inetexit;
 
-define ffrl_nat_address = {{server_ipv4_nat | ipaddr('address')}};
-define router_ip = {{router_ip | ipaddr('address')}};
-define ownas = {{ff_network.as_number}};
-
 function is_ffwp_ffrl_nets() {
   return net ~ [
   185.66.194.18/31{31,32},
@@ -24,7 +20,7 @@ function is_ffwp_ffrl_nets() {
 #In Funktionen Variablen nicht möglich
 function is_ffrl_nat() {
   return net ~ [
-  {{server_ipv4_nat | ipaddr('address')}}/32
+  {{server_ipv4_nat | ipaddr}}
   ];
 }
 
@@ -47,7 +43,7 @@ protocol pipe pipe_main_ffrl {
   peer table ffrl;
   #Source Adresse setzen
   import filter {
-      krt_prefsrc = ffrl_nat_address;
+      krt_prefsrc = {{server_ipv4_nat | ipaddr('address')}};
       if is_default() then accept;
       reject;
   };
@@ -94,7 +90,7 @@ protocol pipe pipe_main_ibgp {
 # IP-NAT-Adresse legen wir in die interne BIRD Routing Table
 protocol static ffrl_uplink_hostroute {
     table ffrl;
-    route ffrl_nat_address/32 reject;
+    route {{server_ipv4_nat | ipaddr}} reject;
 }
 
 protocol kernel kernel_ffwp {
@@ -103,7 +99,7 @@ protocol kernel kernel_ffwp {
   device routes;
   import none;
   export filter {
-    krt_prefsrc = router_ip;
+    krt_prefsrc = {{router_ip | ipaddr('address')}};
     if is_ffwp() then accept;
     reject;
   };
@@ -131,7 +127,7 @@ protocol kernel kernel_interior {
   device routes;
   import none;
   export filter {
-    krt_prefsrc = router_ip;
+    krt_prefsrc = {{router_ip | ipaddr('address')}};
     #Default Routen nicht erwünscht, Rest aufnehmen
     if is_default() then reject;
     accept;
@@ -145,7 +141,7 @@ protocol ospf IGP {
         interface "ffwp_*";
         interface "int_*";
         interface "eth1";
-        stubnet router_ip/32;
+        stubnet {{router_ip | ipaddr}};
         #Default Route
         stubnet 0.0.0.0/0;
   };
@@ -173,8 +169,8 @@ protocol ospf IGP {
 # Uplink über ff Rheinland
 template bgp ffrl_uplink {
         table ffrl;
-        local as ownas;
-        route limit 10000;
+        local as {{ff_network.as_number}};
+        import limit 10000;
         import keep filtered;
         import filter {
           if is_default() then accept;
@@ -193,10 +189,10 @@ template bgp ffrl_uplink {
 # ibgp zwischen den gateways
 template bgp internal {
         table ibgp;
-        source address router_ip;
-        local as ownas;
+        source address {{router_ip | ipaddr('address')}};
+        local as {{ff_network.as_number}};
         import filter {
-                bgp_path.prepend(ownas);
+                bgp_path.prepend({{ff_network.as_number}});
                 preference = 99;
                 accept;
         };
