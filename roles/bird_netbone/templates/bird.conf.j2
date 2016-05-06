@@ -163,6 +163,12 @@ protocol ospf IGP {
         export none;
 };
 
+#Sinnvoll?
+#protocol direct {
+#        table ffrl;
+#        interface "tun-ffrl-*";
+#        import where is_ffrl_tunnel_nets();
+#};
 
 # Uplink über ff Rheinland
 template bgp ffrl_uplink {
