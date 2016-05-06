@@ -29,6 +29,30 @@ ffwp_direct_gw:
 #GRE-Einstellungen zum Freifunk Rheinland
 #+1 auf Rheinland IP = unsere IP
 ffrl_gre:
+  - name: fra0
+  gre_target: 185.66.194.0
+  v4_local: 100.64.5.7/31
+  v4_remote: 100.64.5.6/31
+  v6_local: 2a03:2260:0:27d::2/64
+  v6_remote: 2a03:2260:0:27d::1/64
+  - name: fra1
+  gre_target: 185.66.194.1
+  v4_local: 100.64.5.13/31
+  v4_remote: 100.64.5.12/31
+  v6_local: 2a03:2260:0:280::2/64
+  v6_remote: 2a03:2260:0:280::1/64
+  - name: dus0
+  gre_target: 185.66.193.0
+  v4_local: 100.64.5.9/31
+  v4_remote: 100.64.5.8/31
+  v6_local: 2a03:2260:0:27e::2/64
+  v6_remote: 2a03:2260:0:27e::1/64
+  - name: dus1
+  gre_target: 185.66.193.1
+  v4_local: 100.64.5.15/31
+  v4_remote: 100.64.5.14/31
+  v6_local: 2a03:2260:0:281::2/64
+  v6_remote: 2a03:2260:0:281::1/64
 - name: ber0
   gre_target: 185.66.195.0
   v4_local: 100.64.5.5/31
@@ -41,30 +65,6 @@ ffrl_gre:
   v4_remote: 100.64.5.10/31
   v6_local: 2a03:2260:0:27f::2/64
   v6_remote: 2a03:2260:0:27f::1/64
-- name: dus0
-  gre_target: 185.66.193.0
-  v4_local: 100.64.5.9/31
-  v4_remote: 100.64.5.8/31
-  v6_local: 2a03:2260:0:27e::2/64
-  v6_remote: 2a03:2260:0:27e::1/64
-- name: dus1
-  gre_target: 185.66.193.1
-  v4_local: 100.64.5.15/31
-  v4_remote: 100.64.5.14/31
-  v6_local: 2a03:2260:0:281::2/64
-  v6_remote: 2a03:2260:0:281::1/64
-- name: fra0
-  gre_target: 185.66.194.0
-  v4_local: 100.64.5.7/31
-  v4_remote: 100.64.5.6/31
-  v6_local: 2a03:2260:0:27d::2/64
-  v6_remote: 2a03:2260:0:27d::1/64
-- name: fra1
-  gre_target: 185.66.194.1
-  v4_local: 100.64.5.13/31
-  v4_remote: 100.64.5.12/31
-  v6_local: 2a03:2260:0:280::2/64
-  v6_remote: 2a03:2260:0:280::1/64
 
 internal_gre:
 - name: bgp1to2
