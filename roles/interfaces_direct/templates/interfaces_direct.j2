@@ -14,5 +14,7 @@ iface {{direct.interface}} inet static
 iface {{direct.interface}} inet6 static
         address {{direct.v6_network | ipaddr('address')}}
         netmask {{direct.v6_network | ipaddr('prefix')}}
+        post-up ip address add {{direct.v6_linklocal | ipaddr}} dev $IFACE
+        post-down ip address del {{direct.v6_linklocal | ipaddr}} dev $IFACE
 
 {% endfor %}

@@ -203,9 +203,9 @@ template bgp internal {
 
 {% for host in groups['bgp'] %}
 {% if  hostvars[host]['inventory_hostname'] is not equalto inventory_hostname %}
-protocol bgp internal_{{ hostvars[host]['inventory_hostname'] }} from internal {
-  neighbor {{ hostvars[host]['router_v6_ip'] | ipaddr('address')}} as {{ff_network.as_number}};
-};
+#protocol bgp internal_{{ hostvars[host]['inventory_hostname'] }} from internal {
+#  neighbor {{ hostvars[host]['router_v6_ip'] | ipaddr('address')}} as {{ff_network.as_number}};
+#};
 {% endif %}
 {% endfor %}
 

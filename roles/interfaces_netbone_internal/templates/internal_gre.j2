@@ -19,5 +19,7 @@ iface int_{{gre.name}} inet static
 iface int_{{gre.name}} inet6 static
         address {{gre.v6_local | ipaddr('address')}}
         netmask {{gre.v6_local | ipaddr('prefix')}}
+        post-up ip address add {{gre.v6_linklocal | ipaddr}} dev $IFACE
+        post-down ip address del {{gre.v6_linklocal | ipaddr}} dev $IFACE
 
 {% endfor %}

@@ -27,6 +27,7 @@ interfaces_direct:
 - interface: eth1
   v4_network: 10.198.120.142/31
   v6_network: 2a03:2260:100d:ff07::1/64
+  v6_linklocal: fe80::1/64
 
 
 #GRE-Einstellungen zum Freifunk Rheinland
@@ -75,16 +76,19 @@ internal_gre:
   v4_local: 10.198.120.129/31
   v4_remote: 10.198.120.128/31
   v6_local: 2a03:2260:100d:ff00::2/64
+  v6_linklocal: fe80::2/64
   v6_remote: 2a03:2260:100d:ff00::1/64
 - name: bgp2to3
   gre_target: "{{ hostvars['bgp3']['public_v6'] }}"
   v4_local: 10.198.120.134/31
   v4_remote: 10.198.120.135/31
   v6_local: 2a03:2260:100d:ff03::1/64
+  v6_linklocal: fe80::1/64
   v6_remote: 2a03:2260:100d:ff03::2/64
 - name: bgp2to4
   gre_target: "{{ hostvars['bgp4']['public_v6'] }}"
   v4_local: 10.198.120.136/31
   v4_remote: 10.198.120.137/31
   v6_local: 2a03:2260:100d:ff04::1/64
+  v6_linklocal: fe80::1/64
   v6_remote: 2a03:2260:100d:ff04::2/64

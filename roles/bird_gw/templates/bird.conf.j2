@@ -6,8 +6,6 @@ router id {{router_ip | ipaddr('address')}};
 table freifunk;
 table mainkernel;
 
-define router_ip = {{router_ip | ipaddr('address')}};
-
 function is_default() {
         return (net ~ [0.0.0.0/0]);
 };
