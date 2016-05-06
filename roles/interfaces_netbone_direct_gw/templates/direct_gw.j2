@@ -10,13 +10,9 @@ iface {{direct.interface}} inet static
         address {{direct.v4_network | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }}
         netmask {{direct.v4_network| ipaddr('netmask')}}
         post-up ip link set $IFACE mtu 1400
-#        post-up ip rule add iif $IFACE lookup ??
-#        pre-down ip rule del iif $IFACE lookup ??
-{#
-iface {{gre.name}} inet6 static
-        address {{gre.v6_network}}
-        netmask {{gre.v6_network | ipaddr('prefix')}}
-        post-up ip -6 rule add iif $IFACE lookup ??
-        pre-down ip -6 rule del iif $IFACE lookup ??
-#}
+
+iface {{direct.interface}} inet6 static
+        address {{direct.v6_network | ipaddr('address')}}
+        netmask {{direct.v6_network | ipaddr('prefix')}}
+
 {% endfor %}
