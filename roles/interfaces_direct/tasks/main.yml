@@ -1,7 +1,7 @@
 ---
 
-- name: Create interfaces - direct_gw
-  template: src="direct_gw.j2" dest="/etc/network/interfaces.d/38_direct_gw.cfg"
+- name: Create interfaces - interfaces_direct
+  template: src="interfaces_direct.j2" dest="/etc/network/interfaces.d/38_interfaces_direct.cfg"
   notify:
     - restart networking
 

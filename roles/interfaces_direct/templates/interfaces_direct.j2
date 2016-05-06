@@ -3,7 +3,7 @@
 # direkt angebundene Gateways die auf dem selben Host laufen
 # - Die Konfigurationsdaten werden vorher vergeben und zugewiesen
 # Regex gegen ipaddr('address') austauschen sobald /31 damit funktioniert
-{% for direct in ffwp_direct_gw %}
+{% for direct in interfaces_direct %}
 
 auto {{direct.interface}}
 iface {{direct.interface}} inet static
