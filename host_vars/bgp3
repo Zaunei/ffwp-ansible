@@ -29,25 +29,25 @@ ffwp_direct_gw:
 #GRE-Einstellungen zum Freifunk Rheinland
 #+1 auf Rheinland IP = unsere IP
 ffrl_gre:
-  - name: dus0
+- name: dus0
   gre_target: 185.66.193.0
   v4_local: 100.64.5.33/31
   v4_remote: 100.64.5.32/31
   v6_local: 2a03:2260:0:28a::2/64
   v6_remote: 2a03:2260:0:28a::1/64
-  - name: dus1
+- name: dus1
   gre_target: 185.66.193.1
   v4_local: 100.64.5.39/31
   v4_remote: 100.64.5.38/31
   v6_local: 2a03:2260:0:28d::2/64
   v6_remote: 2a03:2260:0:28d::1/64
-  - name: fra0
+- name: fra0
   gre_target: 185.66.194.0
   v4_local: 100.64.5.31/31
   v4_remote: 100.64.5.30/31
   v6_local: 2a03:2260:0:289::2/64
   v6_remote: 2a03:2260:0:289::1/64
-  - name: fra1
+- name: fra1
   gre_target: 185.66.194.1
   v4_local: 100.64.5.37/31
   v4_remote: 100.64.5.36/31
