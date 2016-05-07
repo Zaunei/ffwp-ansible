@@ -46,6 +46,13 @@
     - mosh
     - conntrack
 
+- name: deinstalliere nicht gewollte Packete
+  apt:
+    pkg: "{{ item }}"
+    state: absent
+  with_items:
+    - rpcbind
+
 - name: create user freifunk
   user: name=freifunk shell=/bin/bash
 
