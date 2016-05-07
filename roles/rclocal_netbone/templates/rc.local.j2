@@ -13,20 +13,14 @@
 
 #Router IP an lo binden (für NAT)
 #toDo: auslagern
-ip address add {{router_ip}} dev lo || true
-ip address add {{server_ipv4_nat}} dev lo || true
-ip -6 address add {{router_v6_ip}} dev lo || true
+ip -4 address add {{router_ip | ipaddr}} dev lo || true
+ip -4 address add {{server_ipv4_nat | ipaddr}} dev lo || true
+ip -6 address add {{router_v6_ip | ipaddr('address')}}/128 dev lo || true
 
 #Packete die in Tabelle 42 landen und für die es keine Route gibt kommen nicht weiter (wichtig)
 ip -4 route add unreachable default metric 1337 table 42 || true
 ip -6 route add unreachable default metric 1337 table 42 || true
 
-
-#Ausgehende Pakete die über Exit sollen mit Source IP matchen und in richtige Tabelle schieben
-#sonst würden z.B ICMP Echo-Replys über normale Default Route gehen
-ip -4 rule add from {{server_ipv4_nat}} table 42 priority 39 || true
-#toDo: schauen ob sich das mit Transfernetzen Probleme macht
-ip -6 rule add from {{ff_network.v6_ffrl_48}} table 42 priority 39 || true
 #Markierte Packete versuchen intern loszuwerden
 ip -4 rule add from all fwmark 0x1 table 40 priority 40 || true
 ip -6 rule add from all fwmark 0x1 table 40 priority 40 || true
@@ -66,6 +60,15 @@ ip -6 rule add from all table 41 priority 48 || true
 #Damit OSPF funktioniert alle Routen bis auf Default Routen
 ip -4 rule add from all table 43 priority 49 || true
 ip -6 rule add from all table 43 priority 49 || true
+
+#Ausgehende Pakete die über Exit sollen mit Source IP matchen und in richtige Tabelle schieben
+#sonst würden z.B ICMP Echo-Replys über normale Default Route gehen
+ip -4 rule add from {{server_ipv4_nat | ipaddr}} table 42 priority 50 || true
+ip -6 rule add from {{ff_network.v6_ffrl_48 | ipaddr}} table 42 priority 50 || true
+
+#Nochmal ganz auf Nummer sicher gehen
+ip -4 rule add unreachable from {{ff_network.v4_network | ipaddr}} priority 51 || true
+ip -6 rule add unreachable from {{ff_network.v6_ffrl_48 | ipaddr}} priority 51 || true
 
 #schicke Uplink keine Packete mit dennen er nichts anfangen können
 #https://en.wikipedia.org/wiki/Reserved_IP_addresses
