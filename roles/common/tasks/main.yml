@@ -44,6 +44,7 @@
     - mtr
     - iptables-persistent
     - mosh
+    - conntrack
 
 - name: create user freifunk
   user: name=freifunk shell=/bin/bash
