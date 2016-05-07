@@ -11,8 +11,6 @@
 #
 # By default this script does nothing.
 
-#Router IP an lo binden (für NAT)
-#toDo: auslagern
 ip -4 address add {{router_ip | ipaddr}} dev lo || true
 ip -4 address add {{server_ipv4_nat | ipaddr}} dev lo || true
 ip -6 address add {{router_v6_ip | ipaddr('address')}}/128 dev lo || true
