@@ -14,8 +14,14 @@ function is_default() {
 
 function is_ffwp() {
     return net ~ [
-    {{ff_network.v6_ffrl_48 | ipaddr}},
-    {{ff_network.v6_ula_48 | ipaddr}}
+    {{ff_network.v6_ffrl_48 | ipaddr}}{48,64},
+    {{ff_network.v6_ula_48 | ipaddr}}{48,64}
+    ];
+}
+
+function is_ula() {
+    return net ~ [
+        fc00::/7{48,64}
     ];
 }
 
@@ -51,7 +57,6 @@ protocol direct ffwp_bridge {
 protocol ospf IGP {
   area 0 {
          interface "ffwp_*";
-         interface "int_*";
 	       interface "eth1";
 	       #todo: Clientnetz
 	       #stubnet {{gw_subnet}};

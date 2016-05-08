@@ -18,14 +18,20 @@ function is_ffwp_ffrl_nets() {
 
 function is_ffwp() {
     return net ~ [
-    {{ff_network.v6_ffrl_48 | ipaddr}},
-    {{ff_network.v6_ula_48 | ipaddr}}
+    {{ff_network.v6_ffrl_48 | ipaddr}}{48,64},
+    {{ff_network.v6_ula_48 | ipaddr}}{48,64}
     ];
 }
 
 function is_default() {
     return net ~ [
         ::/0
+    ];
+}
+
+function is_ula() {
+    return net ~ [
+        fc00::/7{48,64}
     ];
 }
 
