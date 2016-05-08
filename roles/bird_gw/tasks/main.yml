@@ -22,9 +22,12 @@
 
 - name: bird aktivieren (Workaround weil enable=yes nicht tut)
   command: systemctl enable bird
+  when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'
+
 
 - name: bird6 aktivieren und starten
   service: name=bird6 state=started enabled=yes
 
 - name: bird6 aktivieren (Workaround weil enable=yes nicht tut)
   command: systemctl enable bird6
+  when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'

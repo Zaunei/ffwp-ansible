@@ -8,6 +8,8 @@
 #Beachten dass alte Einträge nicht angefasst werden
 - name: rc.local aktivieren und starten
   service: name=rc.local state=started enabled=yes
+  #todo: Wegen Jessie und Wheezy VMs benötigt
+  when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'
 
 - name: Fire all previous handlers
   meta: flush_handlers

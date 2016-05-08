@@ -20,7 +20,7 @@
         state: installed
   with_items:
         - bird
-        - bird6
+#        - bird6
 
 - name: Aktiviere IPv4 Forwarding
   sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes
