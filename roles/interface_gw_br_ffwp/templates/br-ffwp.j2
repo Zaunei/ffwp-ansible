@@ -1,0 +1,12 @@
+# This file is managed by ansible, don't make changes here - they will be overwritten.
+
+auto br-ffwp
+iface br-ffwp inet6 static
+        bridge-ports none
+        address {{interface_br_ffwp.v6_ula_network | ipaddr ('address')}}
+        netmask {{interface_br_ffwp.v6_ula_network | ipaddr ('prefix')}}
+        post-up ip -6 address add {{interface_br_ffwp.v6_public_network | ipaddr}} dev $IFACE
+        post-up ip -6 address del {{interface_br_ffwp.v6_public_network | ipaddr}} dev $IFACE
+iface br-ffwp inet static
+        address {{interface_br_ffwp.v4_network | ipaddr ('address')}}
+        netmask {{interface_br_ffwp.v4_network | ipaddr ('netmask')}}

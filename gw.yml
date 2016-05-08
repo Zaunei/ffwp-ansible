@@ -12,3 +12,4 @@
     - { role: bird_install, tags: "bird_install"}
     - { role: bird_gw, tags: "bird_gw"}
     - { role: interfaces_direct, tags: "interfaces_direct"}
+    - { role: interface_gw_br_ffwp, tags: "interface_gw_br_ffwp"}

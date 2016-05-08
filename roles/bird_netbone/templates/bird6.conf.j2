@@ -142,6 +142,7 @@ protocol ospf IGP {
         interface "int_*";
         interface "eth1";
         #BGP Subnetz
+        #todo: sinnvoller lösen (/56 nicht manuell angeben)
         stubnet {{router_v6_ip | ipaddr('network')}}/56;
         #Default Route
         stubnet ::/0;
