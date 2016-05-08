@@ -1,0 +1,54 @@
+# This file is managed by ansible, don't make changes here - they will be overwritten.
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 53 -j ACCEPT
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
+-A INPUT -p udp --dport 53 -j ACCEPT
+-A INPUT -p udp --dport 67 -j ACCEPT
+-A INPUT -p udp --dport 123 -j ACCEPT
+#fastd
+-A INPUT -p udp --dport 10000:10002 -j ACCEPT
+-A INPUT -p udp --dport 16962 -j ACCEPT
+#OSPF
+-A INPUT -p 89 -j ACCEPT
+#Aktuell alles durchlassen
+#-A INPUT -j REJECT --reject-with icmp-host-prohibited
+#MSS Clamping, wohl hier überflüssig da dies schon auf BGP VM gemacht wird
+#-A FORWARD -i eth1 -o br-ffwp -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+#-A FORWARD -i br-ffwp -o eth1 -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+#-A FORWARD -i ffwp+ -o br-ffwp -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+#-A FORWARD -i br-ffwp -o ffwp+ -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+#ggf schöner Lösen bei VMs ohne NAT
+-A OUTPUT -d {{ (ansible_eth0.ipv4.network ~ "/" ~ ansible_eth0.ipv4.netmask) | ipaddr('net') }} -o eth0 -j ACCEPT
+-A OUTPUT -o eth1 -j ACCEPT
+-A OUTPUT -d 10.0.0.0/8 -o eth0 -j REJECT --reject-with icmp-host-prohibited
+-A OUTPUT -d 172.16.0.0/12 -o eth0 -j REJECT --reject-with icmp-host-prohibited
+-A OUTPUT -d 192.168.0.0/16 -o eth0 -j REJECT --reject-with icmp-host-prohibited
+COMMIT
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+#bei VPN Exit:
+#-A POSTROUTING -o tun0 -j MASQUERADE
+COMMIT
+*mangle
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+-A PREROUTING -i br-ffwp -j MARK --set-xmark 0x1/0xffffffff
+#-A PREROUTING -i eth1 -j MARK --set-xmark 0x1/0xffffffff
+#-A PREROUTING -i ffwp+ -j MARK --set-xmark 0x1/0xffffffff
+#-A OUTPUT -o eth0 -p udp -m udp --dport 53 -j MARK --set-xmark 0x1/0xffffffff
+#-A OUTPUT -o eth0 -p tcp -m tcp --dport 53 -j MARK --set-xmark 0x1/0xffffffff
+COMMIT
