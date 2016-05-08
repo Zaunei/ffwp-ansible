@@ -40,7 +40,8 @@
 #    - molly-guard
     - git
     - iperf
-    - iperf3
+#Gibts bei Wheezy nicht
+#    - iperf3
     - mtr
     - iptables-persistent
     - mosh
