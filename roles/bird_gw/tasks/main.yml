@@ -3,6 +3,9 @@
 - name: Routingtabelle 42 auch freifunk nennen
   lineinfile: dest="/etc/iproute2/rt_tables" line="42   freifunk"
 
+- name: Routingtabelle 43 auch interior nennen
+  lineinfile: dest="/etc/iproute2/rt_tables" line="43   interior"
+
 #todo: check bird.conf before restart bird!!!
 - name: configure bird.conf
   template: src=bird.conf.j2 dest=/etc/bird/bird.conf

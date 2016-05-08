@@ -38,8 +38,16 @@
 /sbin/ip -6 rule add from all fwmark 0x1 table 42 priority 40|| true
 
 #Vorsichtsmaßnamen:
-/sbin/ip -4 rule add unreachable iif br-ffwp priority 50 || true
-/sbin/ip -4 rule add unreachable iif br-ffwp priority 50 || true
+/sbin/ip -4 rule add unreachable iif br-ffwp priority 41 || true
+/sbin/ip -6 rule add unreachable iif br-ffwp priority 41 || true
+/sbin/ip -4 rule add unreachable from all fwmark 0x1 priority 42 || true
+/sbin/ip -6 rule add unreachable from all fwmark 0x1 priority 42 || true
+
+#Damit OSPF funktioniert alle OSPF Routen bis auf Default Routen
+/sbin/ip -4 rule add from all table 43 priority 50 || true
+/sbin/ip -6 rule add from all table 43 priority 50 || true
+
+#Vorsichtsmaßnamen:
 /sbin/ip -4 rule add unreachable from {{ff_network.v4_network | ipaddr}} priority 51 || true
 /sbin/ip -6 rule add unreachable from {{ff_network.v6_ffrl_48 | ipaddr}} priority 51 || true
 /sbin/ip -6 rule add unreachable from {{ff_network.v6_ula_48 | ipaddr}} priority 52 || true
