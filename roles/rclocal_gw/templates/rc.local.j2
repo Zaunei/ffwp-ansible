@@ -11,14 +11,38 @@
 #
 # By default this script does nothing.
 
-ip route add unreachable 10.0.0.0/8 || true
-ip route add unreachable 172.16.0.0/12 || true
-ip route add unreachable 192.168.0.0/16 || true
-ip route add unreachable 240.0.0.0/4 || true
+#verhindert dass Packete an private IP Ranges über default Route (eth0) gehen
+#blocke private Adressbereiche (RFC1918)
+/sbin/ip -4 route add unreachable 10.0.0.0/8 table main || true
+/sbin/ip -4 route add unreachable 172.16.0.0/12 table main || true
+/sbin/ip -4 route add unreachable 192.168.0.0/16 table main || true
+#blocke Carrier-grade NAT Adressbereich (RFC6598)
+/sbin/ip -4 route add unreachable 100.64.0.0/10 table main || true
+#blocke Multicast Adressbereich
+/sbin/ip -4 route add unreachable 224.0.0.0/3 table main || true
+#blocke Reserved Adressbereich
+/sbin/ip -4 route add unreachable 240.0.0.0/4 table main || true
+#blocke Loopback Adressbereich
+/sbin/ip -4 route add unreachable 127.0.0.0/8 table main || true
+#blocke Documentation Adressbereich
+/sbin/ip -4 route add unreachable 192.0.0.0.0/24 table main || true
+/sbin/ip -4 route add unreachable 198.51.100.0/24 table main || true
+/sbin/ip -4 route add unreachable 203.0.113.0/24 table main || true
 
 
-/sbin/ip route add unreachable default metric 1337 table 42 || true
-/sbin/ip rule add from all fwmark 0x1 table 42 || true
+
+/sbin/ip -4 route add unreachable default metric 1337 table 42 || true
+/sbin/ip -4 rule add from all fwmark 0x1 table 42 priority 40|| true
+
+/sbin/ip -6 route add unreachable default metric 1337 table 42 || true
+/sbin/ip -6 rule add from all fwmark 0x1 table 42 priority 40|| true
+
+#Vorsichtsmaßnamen:
+/sbin/ip -4 rule add unreachable iif br-ffwp priority 50 || true
+/sbin/ip -4 rule add unreachable iif br-ffwp priority 50 || true
+/sbin/ip -4 rule add unreachable from {{ff_network.v4_network | ipaddr}} priority 51 || true
+/sbin/ip -6 rule add unreachable from {{ff_network.v6_ffrl_48 | ipaddr}} priority 51 || true
+/sbin/ip -6 rule add unreachable from {{ff_network.v6_ula_48 | ipaddr}} priority 52 || true
 
 
 exit 0
