@@ -20,11 +20,17 @@
 
 - name: configure bird6.conf
   template: src=bird6.conf.j2 dest=/etc/bird/bird6.conf
-#   notify:
-#    - restart bird6
+  notify:
+    - restart bird6
 
 - name: bird aktivieren und starten
   service: name=bird state=started enabled=yes
 
-#- name: bird6 aktivieren und starten
-#  service: name=bird6 state=started enabled=yes
+- name: bird aktivieren (Workaround weil enable=yes nicht tut)
+  command: systemctl enable bird
+
+- name: bird6 aktivieren und starten
+  service: name=bird6 state=started enabled=yes
+
+- name: bird6 aktivieren (Workaround weil enable=yes nicht tut)
+  command: systemctl enable bird6
