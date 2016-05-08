@@ -6,9 +6,9 @@
   remote_user: root
   roles:
 #    - { role: hostname, tags: "hostname"}
-#    - { role: common, tags: "common"}
-#    - { role: iptables_gw, tags: "iptables_gw"}
+    - { role: common, tags: "common"}
+    - { role: iptables_gw, tags: "iptables_gw"}
     - { role: rclocal_gw, tags: "rclocal_gw"}
-    - { role: interfaces_direct, tags: "interfaces_direct"}
     - { role: bird_install, tags: "bird_install"}
     - { role: bird_gw, tags: "bird_gw"}
+    - { role: interfaces_direct, tags: "interfaces_direct"}
