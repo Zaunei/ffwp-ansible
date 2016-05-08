@@ -141,8 +141,8 @@ protocol ospf IGP {
         interface "ffwp_*";
         interface "int_*";
         interface "eth1";
-        #ToDo: schöner lösen
-        stubnet {{router_v6_ip | ipaddr('network')}}/64;
+        #BGP Subnetz
+        stubnet {{router_v6_ip | ipaddr('network')}}/56;
         #Default Route
         stubnet ::/0;
   };
@@ -190,7 +190,7 @@ template bgp ffrl_uplink {
 # ibgp zwischen den gateways
 template bgp internal {
         table ibgp;
-  #      source address {{router_v6_ip | ipaddr('address')}};
+        source address {{router_v6_ip | ipaddr('address')}};
         local as {{ff_network.as_number}};
         import filter {
                 bgp_path.prepend({{ff_network.as_number}});
@@ -209,9 +209,9 @@ template bgp internal {
 
 {% for host in groups['bgp'] %}
 {% if  hostvars[host]['inventory_hostname'] is not equalto inventory_hostname %}
-#protocol bgp internal_{{ hostvars[host]['inventory_hostname'] }} from internal {
-#  neighbor {{ hostvars[host]['router_v6_ip'] | ipaddr('address')}} as {{ff_network.as_number}};
-#};
+protocol bgp internal_{{ hostvars[host]['inventory_hostname'] }} from internal {
+  neighbor {{ hostvars[host]['router_v6_ip'] | ipaddr('address')}} as {{ff_network.as_number}};
+};
 {% endif %}
 {% endfor %}
 
