@@ -19,6 +19,7 @@
     state: installed
   with_items:
     - vim
+    - gawk
     - wget
     - curl
     - mc
