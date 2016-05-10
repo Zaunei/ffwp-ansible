@@ -61,8 +61,7 @@ protocol ospf IGP {
 	       #Public Clientnetz
          #todo: sinnvoller lösen (/64 nicht manuell angeben)
 	       stubnet {{interface_br_ffwp.v6_public_network | ipaddr ('network')}}/64;
-         #Bei Bedarf mal versuchen:
-         #stubnet {{interface_br_ffwp.v6_ula_network | ipaddr ('network')}}/64;
+         stubnet {{interface_br_ffwp.v6_ula_network | ipaddr ('network')}}/64;
 	       };
          import all;
          #Keine Routen von anderen Quellen per OSPF propagieren

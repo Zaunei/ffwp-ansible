@@ -43,7 +43,7 @@
     dest=/tmp/tinc.deb
 
 - name: Clone ICVPN
-  git: repo=https://github.com/freifunk/icvpn.git dest=/etc/tinc/icvpn/
+  git: repo=https://github.com/freifunk/icvpn.git dest=/etc/tinc/icvpn/ force=yes
 
 - name: Checke ob Privatekey vorhanden ist
   stat: path=/etc/tinc/icvpn/rsa_key.priv
@@ -78,3 +78,6 @@
   with_items:
      - tinc-up
      - tinc-down
+
+- name: ICVPN Netbone Cronjob
+  cron: name="icvpn_netbone" minute=0 hour=* job="/home/freifunk/scripts-ffwp/icvpn_netbone.sh > /dev/null"

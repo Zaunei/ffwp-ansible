@@ -1,10 +1,9 @@
 http://bird.network.cz/?get_doc&f=bird.html#toc5
 https://github.com/FreiFunkMuenster/ansible-ffms
-https://gluon-gateway-doku.readthedocs.io/de/latest/index.html
-https://github.com/freifunk-mwu/gateway-configs
 https://github.com/freifunk-fulda/saltstack-config
+https://github.com/freifunk-mwu/gateway-configs
+https://gluon-gateway-doku.readthedocs.io/de/latest/index.html
 https://github.com/ffddorf/config
-https://github.com/freifunkhamburg/bird/blob/master/bird.conf
 https://github.com/Mic92/bird-dn42
 http://wiki.freifunk-bielefeld.de/doku.php?id=ic-vpn
 https://www.freifunk-gera-greiz.de/wiki/-/wiki/Allgemein/Gateway
@@ -17,3 +16,4 @@ http://www.aaa-security.nl/shop/support/technotes/snentno_BirdDynamicRouting-V1-
 https://github.com/FreifunkBremen/ansiblehttps://github.com/FreifunkBremen/ansible
 https://github.com/Freifunk-Troisdorf/ansible.fftdf.supernodehttps://github.com/Freifunk-Troisdorf/ansible.fftdf.supernode
 https://wiki.freifunk-stuttgart.net/technik:gateways:routing
+https://github.com/freifunkhamburg/bird/blob/master/bird.conf

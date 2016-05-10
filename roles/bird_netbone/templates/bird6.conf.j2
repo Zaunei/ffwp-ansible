@@ -10,6 +10,10 @@ table icvpn;
 table ffrl;
 table inetexit;
 
+roa table icvpn_roa {
+	include "/etc/bird/bird6_roa_icvpn.con?";
+};
+
 function is_ffwp_ffrl_nets() {
   return net ~ [
   {{ff_network.v6_ffrl_48 | ipaddr}}{48,64}
@@ -34,6 +38,17 @@ function is_ula() {
         fc00::/7{48,64}
     ];
 }
+
+# ggf. mal aufsplitten
+function is_valid_network() {
+  return net ~ [
+    fc00::/8{48,64}, # ULA (undefined)
+    fd00::/8{48,64} # ULA (defined)
+#    2001:bf7::/32{32,128}, # Freifunk (Foerderverein Freie Netzwerke) IPv6 Range
+#    2a03:2260::/30{30,128}, # Freifunk Rheinland e.V.
+#    2001:67c:20a1::/48{48,48}, # CCC Event Network
+  ];
+};
 
 protocol device {
         scan time 10;
@@ -86,6 +101,19 @@ protocol pipe pipe_main_ibgp {
   export where !is_ffwp() && !is_default();
 };
 
+protocol pipe pipe_main_icvpn {
+  peer table icvpn;
+  import filter {
+    if is_ffwp() then reject;
+    if is_valid_network() then accept;
+    reject;
+  };
+  export filter {
+    if is_ffwp() && is_valid_network() then accept;
+    if is_valid_network() then accept;
+    reject;
+  };
+};
 
 #IPv6 Netze die announced werden sollen
 protocol static ffrl_uplink_hostroute {
@@ -108,7 +136,22 @@ protocol kernel kernel_ffwp {
   kernel table 40;
 };
 
-#todo: ICVPN
+protocol kernel kernel_icvpn {
+  scan time 10;
+  #Auch Device Routen in Tabelle eintragen da benötigt und durch rules kein kontakt zur Main Routing Tabelle
+  device routes;
+  import none;
+  export filter {
+# Todo: was sinnvolles rausfinden
+#    krt_prefsrc = {{router_ip | ipaddr('address')}};
+    if is_default() then reject;
+    if is_ffwp() then reject;
+    if is_valid_network() then accept;
+    reject;
+  };
+  table icvpn;
+  kernel table 41;
+};
 
 #Routen aus inetexit in die Kernel Table 42 (ffinetexit) schreiben
 protocol kernel kernel_inetexit {
@@ -188,6 +231,39 @@ template bgp ffrl_uplink {
         default bgp_med 1;
 };
 
+template bgp icvpn_tinc {
+    table icvpn;
+    route limit 10000;
+	  import keep filtered;
+    source address {{icvpn.ipv6 | ipaddr ('address')}};
+    local as {{ff_network.as_number}};
+    import filter {
+      if (is_default()) then {
+			print "ASN ", bgp_path.last, " announces default route (via ", proto ,")";
+			reject;
+		  }
+		  if (is_ffwp()) then {
+			     print "ASN ", bgp_path.last, " announces our RFC-1918 prefix (via ", proto ,")";
+			     reject;
+		  }
+		  if (bgp_path.len > 16) then reject;
+		  if (roa_check(icvpn_roa, net, bgp_path.last) = ROA_INVALID) then {
+		     print "[icvpn] ROA check failed for ", net, " ASN ", bgp_path.last;
+           reject;
+		  }
+      if (is_valid_network()) then accept;
+		  reject;
+	   };
+    export filter {
+      # is_valid_network sorgt dafür das nur sinnvolle Subnetze announced werden
+      if is_ffwp() && is_valid_network() then accept;
+      if source = RTS_BGP then {
+        if is_valid_network() then accept;
+      }
+      reject;
+    };
+}
+
 # ibgp zwischen den gateways
 template bgp internal {
         table ibgp;
@@ -230,3 +306,5 @@ protocol bgp ffrl_{{gre.name}} from ffrl_uplink {
 };
 
 {% endfor %}
+
+include "/etc/bird/bird6_peers_icvpn_tinc.conf";

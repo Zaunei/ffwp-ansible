@@ -15,6 +15,10 @@
 /sbin/ip -4 address add {{server_ipv4_nat | ipaddr}} dev lo || true
 /sbin/ip -6 address add {{router_v6_ip | ipaddr('address')}}/128 dev lo || true
 
+#Statische Routen für ICVPN Transfernetze
+/sbin/ip -4 route add 10.207.0.0/16 proto static dev icvpn_tinc table 41 || true
+/sbin/ip -6 route add fec0::/96 proto static dev icvpn_tinc table 41 || true
+
 #Packete die in Tabelle 42 landen und für die es keine Route gibt kommen nicht weiter (wichtig)
 /sbin/ip -4 route add unreachable default metric 1337 table 42 || true
 /sbin/ip -6 route add unreachable default metric 1337 table 42 || true
