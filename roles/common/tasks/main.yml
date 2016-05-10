@@ -59,6 +59,12 @@
 - name: create user freifunk
   user: name=freifunk shell=/bin/bash
 
+- name: Clone scripts-ffwp
+  git: repo=https://github.com/freifunk-westpfalz/scripts-ffwp.git dest=/home/freifunk/scripts-ffwp
+  become: yes
+  become_method: su
+  become_user: freifunk
+
 #todo: exclusiv
 - name: add sshkeys for root
   authorized_key:
