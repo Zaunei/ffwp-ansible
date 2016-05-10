@@ -1,0 +1,42 @@
+---
+
+- name: Für ICVPN benötigte Packete installieren
+  apt:
+        pkg: "{{item}}"
+        update_cache: yes
+        state: installed
+  with_items:
+        - python-yaml
+        - python3-yaml
+        - python3-pip
+        - liblzo2-2
+
+- name: Für ICVPN benötigte Packete aus dem Pip installieren
+  pip:
+        name: "{{item}}"
+        state: latest
+        executable: pip3
+  with_items:
+        - ipaddress
+  when: ansible_distribution == 'Debian' and ansible_distribution_release == 'jessie'
+
+- name: Erstelle ICVPN Verzeichnis im Home von freifunk
+  file: path=/home/freifunk/icvpn state=directory
+  become: yes
+  become_method: su
+  become_user: freifunk
+
+- name: Clone ICVPN-Meta
+  git: repo=https://github.com/freifunk/icvpn-meta.git dest=/home/freifunk/icvpn/icvpn-meta
+  become: yes
+  become_method: su
+  become_user: freifunk
+
+- name: Clone ICVPN-Scripts
+  git: repo=https://github.com/freifunk/icvpn-scripts.git dest=/home/freifunk/icvpn/icvpn-scripts
+  become: yes
+  become_method: su
+  become_user: freifunk
+
+- name: ICVPN GW Cronjob
+  cron: name="icvpn_gw" minute=* hour=* job="/home/freifunk/scripts-ffwp/icvpn_gw.sh > /dev/null"
