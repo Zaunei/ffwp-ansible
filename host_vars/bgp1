@@ -92,3 +92,8 @@ internal_gre:
   v6_local: 2a03:2260:100d:ff02::1/64
   v6_linklocal: fe80::1/64
   v6_remote: 2a03:2260:100d:ff02::2/64
+
+icvpn:
+  name: westpfalz1
+  ipv4: 10.207.0.85/16
+  ipv6: fec0::a:cf:0:55/96

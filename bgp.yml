@@ -14,3 +14,4 @@
     - { role: interfaces_direct, tags: "interfaces_direct"}
     - { role: bird_install, tags: "bird_install"}
     - { role: bird_netbone, tags: "bird_netbone"}
+    - { role: icvpn_netbone, tags: "icvpn_netbone"}

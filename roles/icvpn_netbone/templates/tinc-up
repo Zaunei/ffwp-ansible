@@ -1,0 +1,4 @@
+#!/bin/sh
+/sbin/ip link set dev $INTERFACE up
+/sbin/ip addr add dev $INTERFACE {{icvpn.ipv4 | ipaddr}} broadcast 10.207.255.255 scope link
+/sbin/ip -6 addr add dev $INTERFACE {{icvpn.ipv6 | ipaddr}} preferred_lft 0

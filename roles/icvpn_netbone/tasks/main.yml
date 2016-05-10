@@ -1,0 +1,80 @@
+---
+
+- name: Für ICVPN benötigte Packete installieren
+  apt:
+        pkg: "{{item}}"
+        update_cache: yes
+        state: installed
+  with_items:
+        - python-yaml
+        - python3-yaml
+        - python3-pip
+        - liblzo2-2
+
+- name: Für ICVPN benötigte Packete aus dem Pip installieren
+  pip:
+        name: "{{item}}"
+        state: latest
+        executable: pip3
+  with_items:
+        - ipaddress
+
+- name: Erstelle ICVPN Verzeichnis im Home von freifunk
+  file: path=/home/freifunk/icvpn state=directory
+  become: yes
+  become_method: su
+  become_user: freifunk
+
+- name: Clone ICVPN-Meta
+  git: repo=https://github.com/freifunk/icvpn-meta.git dest=/home/freifunk/icvpn/icvpn-meta
+  become: yes
+  become_method: su
+  become_user: freifunk
+
+- name: Clone ICVPN-Scripts
+  git: repo=https://github.com/freifunk/icvpn-scripts.git dest=/home/freifunk/icvpn/icvpn-scripts
+  become: yes
+  become_method: su
+  become_user: freifunk
+
+- name: Download tincpre deb from git FIXME FROM ANSIBLE 2.1
+  get_url:
+    url="https://github.com/freifunk-westpfalz/debian-packages/raw/master/tinc_1.1~pre12-1_amd64.deb"
+    dest=/tmp/tinc.deb
+
+- name: Clone ICVPN
+  git: repo=https://github.com/freifunk/icvpn.git dest=/etc/tinc/icvpn/
+
+- name: Checke ob Privatekey vorhanden ist
+  stat: path=/etc/tinc/icvpn/rsa_key.priv
+  register: icvpn_private_key_exist
+
+- fail: msg="Bitte manuell Privatekeys in /etc/tinc/icvpn/ ablegen"
+  when: icvpn_private_key_exist.stat.exists == False
+
+- name: Install tincpre deb
+# Geht erst ab Ansible 2.1
+#  apt: deb=https://github.com/freifunk-westpfalz/debian-packages/raw/master/tinc_1.1~pre12-1_amd64.deb dpkg_options="skip-same-version"
+  apt: deb=/tmp/tinc.deb dpkg_options="skip-same-version"
+
+- name: deploy post-merge-hook
+  copy: remote_src=yes src=/etc/tinc/icvpn/scripts/post-merge dest=/etc/tinc/icvpn/.git/hooks/post-merge mode=755
+
+- name: ICVPN in /etc/tinc/nets.boot eintragen
+  lineinfile: dest="/etc/tinc/nets.boot" line="icvpn"
+
+- name: deploy tinc-config
+  template: src=tinc.conf dest=/etc/tinc/icvpn/tinc.conf owner=root group=root mode=644
+
+#todo: besser lösen (tinc starten und post-merge-hook)
+- name: Starte tinc@icvpn
+  service: name=tinc@icvpn state=started enabled=yes
+
+- name: Führe post-merge-hook aus
+  shell: cd /etc/tinc/icvpn && /etc/tinc/icvpn/.git/hooks/post-merge
+
+- name: deploy up/down-links
+  template: src={{ item }} dest=/etc/tinc/icvpn/{{ item }} mode=755
+  with_items:
+     - tinc-up
+     - tinc-down
