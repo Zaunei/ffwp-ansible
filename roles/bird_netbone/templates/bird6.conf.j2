@@ -143,7 +143,7 @@ protocol kernel kernel_icvpn {
   import none;
   export filter {
 # Todo: was sinnvolles rausfinden
-#    krt_prefsrc = {{router_ip | ipaddr('address')}};
+#    krt_prefsrc = {{icvpn.ipv6 | ipaddr('address')}};
     if is_default() then reject;
     if is_ffwp() then reject;
     if is_valid_network() then accept;
@@ -233,7 +233,7 @@ template bgp ffrl_uplink {
 
 template bgp icvpn_tinc {
     table icvpn;
-    route limit 10000;
+    import limit 10000;
 	  import keep filtered;
     source address {{icvpn.ipv6 | ipaddr ('address')}};
     local as {{ff_network.as_number}};

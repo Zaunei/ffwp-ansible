@@ -251,7 +251,7 @@ template bgp internal {
 
 template bgp icvpn_tinc {
     table icvpn;
-    route limit 10000;
+    import limit 10000;
     import keep filtered;
     source address {{icvpn.ipv4 | ipaddr ('address')}};
     local as {{ff_network.as_number}};

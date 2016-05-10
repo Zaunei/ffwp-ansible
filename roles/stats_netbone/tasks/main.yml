@@ -1,0 +1,11 @@
+---
+
+#todo: doppelt (common), nicht schön
+- name: Clone scripts-ffwp
+  git: repo=https://github.com/freifunk-westpfalz/scripts-ffwp.git dest=/home/freifunk/scripts-ffwp
+  become: yes
+  become_method: su
+  become_user: freifunk
+
+- name: ICVPN Netbone Cronjob
+  cron: name="stats_netbone" minute=* hour=* job="/home/freifunk/scripts-ffwp/stats_netbone.sh > /dev/null"

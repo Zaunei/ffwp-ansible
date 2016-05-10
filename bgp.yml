@@ -15,3 +15,4 @@
     - { role: bird_install, tags: "bird_install"}
     - { role: bird_netbone, tags: "bird_netbone"}
     - { role: icvpn_netbone, tags: "icvpn_netbone"}
+    - { role: stats_netbone, tags: "stats_netbone"}
