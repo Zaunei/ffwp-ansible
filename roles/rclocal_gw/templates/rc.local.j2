@@ -25,7 +25,7 @@
 #blocke Loopback Adressbereich
 /sbin/ip -4 route add unreachable 127.0.0.0/8 table main || true
 #blocke Documentation Adressbereich
-/sbin/ip -4 route add unreachable 192.0.0.0.0/24 table main || true
+/sbin/ip -4 route add unreachable 192.0.0.0/24 table main || true
 /sbin/ip -4 route add unreachable 198.51.100.0/24 table main || true
 /sbin/ip -4 route add unreachable 203.0.113.0/24 table main || true
 
@@ -48,14 +48,15 @@
 /sbin/ip -6 rule add from all table 43 priority 50 || true
 
 #Ausgehende Pakete die über Exit sollen mit Source IP matchen und in richtige Tabelle schieben
-#sonst würden z.B ICMP Echo-Replys über normale Default Route gehen
+#sonst würden z.B ICMP Echo-Replys über normale Default Route gehen bzw in die unreachable Routen rennen
 /sbin/ip -6 rule add from {{ff_network.v6_ffrl_48 | ipaddr}} table 42 priority 51 || true
-#v4 braucht das nicht wegen NAT
+/sbin/ip -6 rule add from {{ff_network.v6_ula_48 | ipaddr}} table 42 priority 52 || true
+/sbin/ip -4 rule add from 10.198.0.0/16 lookup 42 priority 51 || true
 
 #Vorsichtsmaßnamen:
-/sbin/ip -4 rule add unreachable from {{ff_network.v4_network | ipaddr}} priority 52 || true
-/sbin/ip -6 rule add unreachable from {{ff_network.v6_ffrl_48 | ipaddr}} priority 52 || true
-/sbin/ip -6 rule add unreachable from {{ff_network.v6_ula_48 | ipaddr}} priority 53 || true
+/sbin/ip -4 rule add unreachable from {{ff_network.v4_network | ipaddr}} priority 53 || true
+/sbin/ip -6 rule add unreachable from {{ff_network.v6_ffrl_48 | ipaddr}} priority 53 || true
+/sbin/ip -6 rule add unreachable from {{ff_network.v6_ula_48 | ipaddr}} priority 54 || true
 
 
 exit 0
