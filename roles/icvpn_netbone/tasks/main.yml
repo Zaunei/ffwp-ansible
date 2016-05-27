@@ -37,11 +37,6 @@
   become_method: su
   become_user: freifunk
 
-- name: Download tincpre deb from git FIXME FROM ANSIBLE 2.1
-  get_url:
-    url="https://github.com/freifunk-westpfalz/debian-packages/raw/master/tinc_1.1~pre12-1_amd64.deb"
-    dest=/tmp/tinc.deb
-
 - name: Clone ICVPN
   git: repo=https://github.com/freifunk/icvpn.git dest=/etc/tinc/icvpn/ force=yes
 
@@ -53,9 +48,7 @@
   when: icvpn_private_key_exist.stat.exists == False
 
 - name: Install tincpre deb
-# Geht erst ab Ansible 2.1
-#  apt: deb=https://github.com/freifunk-westpfalz/debian-packages/raw/master/tinc_1.1~pre12-1_amd64.deb dpkg_options="skip-same-version"
-  apt: deb=/tmp/tinc.deb dpkg_options="skip-same-version"
+  apt: deb=https://github.com/freifunk-westpfalz/debian-packages/raw/master/tinc_1.1~pre12-1_amd64.deb dpkg_options="skip-same-version"
 
 - name: deploy post-merge-hook
   copy: remote_src=yes src=/etc/tinc/icvpn/scripts/post-merge dest=/etc/tinc/icvpn/.git/hooks/post-merge mode=755
