@@ -7,16 +7,17 @@
     repo: "{{ item }}"
     state: present
   with_items:
-    - "deb http://ftp.de.debian.org/debian/ {{ ansible_distribution_release }} main"
-    - "deb http://ftp.de.debian.org/debian/ {{ ansible_distribution_release }}-updates main"
+    - "deb http://ftp2.de.debian.org/debian/ {{ ansible_distribution_release }} main"
+    - "deb http://ftp2.de.debian.org/debian/ {{ ansible_distribution_release }}-updates main"
     - "deb http://security.debian.org/ {{ ansible_distribution_release }}/updates main"
+    - "deb http://ftp2.de.debian.org/debian/ {{ ansible_distribution_release }}-backports main"
   when: ansible_distribution == "Debian"
 
 - name: install common packages
   apt:
     pkg: "{{ item }}"
     update_cache: yes
-    state: installed
+    state: latest
   with_items:
     - sudo
     - vim
@@ -42,8 +43,7 @@
 #    - molly-guard
     - git
     - iperf
-#Gibts bei Wheezy nicht
-#    - iperf3
+    - iperf3
     - mtr
     - iptables-persistent
     - mosh
@@ -55,6 +55,23 @@
     state: absent
   with_items:
     - rpcbind
+    - exim*
+
+- name: install backports-kernel
+  apt:
+    pkg: "{{ item }}"
+    update_cache: yes
+    state: present
+  with_items:
+    - linux-image-4.5.0-0.bpo.2-amd64
+    - linux-headers-4.5.0-0.bpo.2-amd64
+  when: backports_kernel
+
+- name: Aktiviere IPv4 Forwarding
+  sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes
+
+- name: Aktiviere IPv6 Forwarding
+  sysctl: name="net.ipv6.conf.all.forwarding" value=1 sysctl_set=yes state=present reload=yes
 
 - name: create user freifunk
   user: name=freifunk shell=/bin/bash
