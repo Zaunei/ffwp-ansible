@@ -3,6 +3,7 @@ https://github.com/FreiFunkMuenster/ansible-ffms
 https://github.com/freifunk-fulda/saltstack-config
 https://github.com/freifunk-mwu/gateway-configs
 https://gluon-gateway-doku.readthedocs.io/de/latest/index.html
+https://github.com/FFEssen/supernode-ansible
 https://github.com/ffddorf/config
 https://github.com/Mic92/bird-dn42
 http://wiki.freifunk-bielefeld.de/doku.php?id=ic-vpn
