@@ -48,6 +48,7 @@
     - iptables-persistent
     - mosh
     - conntrack
+    - bridge-utils
 
 - name: deinstalliere nicht gewollte Packete
   apt:
@@ -78,6 +79,12 @@
 
 - name: Clone scripts-ffwp
   git: repo=https://github.com/freifunk-westpfalz/scripts-ffwp.git dest=/home/freifunk/scripts-ffwp
+  become: yes
+  become_method: su
+  become_user: freifunk
+
+- name: Clone config-ffwp
+  git: repo=https://github.com/freifunk-westpfalz/config-ffwp.git dest=/home/freifunk/config-ffwp
   become: yes
   become_method: su
   become_user: freifunk
