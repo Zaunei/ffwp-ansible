@@ -7,7 +7,7 @@
 -A INPUT -p ipv6-icmp -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
--A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -i br-ffwp -j ACCEPT
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -i br_ffwp -j ACCEPT
 -A INPUT -p udp --dport 53 -j ACCEPT
 -A INPUT -p udp --dport 67 -j ACCEPT
 -A INPUT -p udp --dport 123 -j ACCEPT
@@ -31,5 +31,5 @@ COMMIT
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
--A PREROUTING -i br-ffwp -j MARK --set-xmark 0x1/0xffffffff
+-A PREROUTING -i br_ffwp -j MARK --set-xmark 0x1/0xffffffff
 COMMIT

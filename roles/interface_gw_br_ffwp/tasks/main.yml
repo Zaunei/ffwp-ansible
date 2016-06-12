@@ -1,7 +1,7 @@
 ---
 
-- name: Create interfaces - br-ffwp
-  template: src="br-ffwp.j2" dest="/etc/network/interfaces.d/50_br-ffwp.cfg"
+- name: Create interfaces - br_ffwp
+  template: src="br_ffwp.j2" dest="/etc/network/interfaces.d/50_br_ffwp.cfg"
   notify:
     - restart networking
 
