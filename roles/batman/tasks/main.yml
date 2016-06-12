@@ -36,7 +36,7 @@
   notify:
     - restart networking
 
-- name: Create interfaces - br-ffwp
+- name: Create interfaces - bat0
   template: src="batman-interfaces.j2" dest="/etc/network/interfaces.d/10_batman.cfg"
   notify:
   - restart networking

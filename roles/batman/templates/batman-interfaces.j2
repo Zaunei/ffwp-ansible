@@ -2,7 +2,7 @@
 
 allow-hotplug bat0
 iface bat0 inet6 manual
-        #post-up brctl addif br-ffwp $IFACE
+        #post-up brctl addif br_ffwp $IFACE
         post-up batctl -m $IFACE it 10000
         post-up batctl -m $IFACE dat 1
         {% if batman.gateway -%}
@@ -10,5 +10,5 @@ iface bat0 inet6 manual
         {% endif -%}
         post-up echo 120 > /sys/class/net/$IFACE/mesh/hop_penalty
         #post-up service alfred start
-        pre-down brctl delif br-ffwp $IFACE || true
+        pre-down brctl delif br_ffwp $IFACE || true
         down ip link set $IFACE down
