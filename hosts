@@ -10,3 +10,6 @@ gw02 ansible_port=22 ansible_host=gw02.freifunk-westpfalz.de
 #gw03 ansible_port=22100 ansible_host=gw03.freifunk-westpfalz.de
 #gw04 ansible_port=22100 ansible_host=gw04.freifunk-westpfalz.de
 #gw05 ansible_port=22 ansible_host=gw05.freifunk-westpfalz.de
+
+[firmware]
+firmware01 ansible_port=22151 ansible_host=firmware.freifunk-westpfalz.de

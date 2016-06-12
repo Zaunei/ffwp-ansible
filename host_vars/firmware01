@@ -1,0 +1,30 @@
+#server_besitzer: "C3KL"
+public_v4: 62.210.83.40
+public_v6: 2001:bc8:225e:1001::151
+
+router_ip: 10.198.16.1/32
+gw_subnet: 10.198.16.0/21
+
+backports_kernel: false
+#ggf in Gruppe verschieben
+ff_network:
+   as_number: 65242
+   v4_network: 10.198.0.0/16
+   v6_ula_48: fdc6:c4fe:1de4::/48
+   v6_ffrl_48: 2a03:2260:100d::/48
+   v6_ffrl_00_56: 2a03:2260:100d:0000::/56
+
+#interface_br_ffwp:
+#  #Bald mal auf /17 umbauen
+#  v4_network: 10.198.16.1/16
+#  v6_ula_network: fdc6:c4fe:1de4::f1/64
+#  v6_public_network: 2a03:2260:100d:0000::2/64
+
+batman:
+  gateway: false
+  bandwidth: 96mbit/96mbit
+
+fastd:
+  - name: firmware01
+    type: client
+    mtu: 1406

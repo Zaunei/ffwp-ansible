@@ -1,0 +1,33 @@
+---
+
+- name: Installiere fastd
+  apt:
+    pkg: "fastd"
+    update_cache: yes
+    state: latest
+
+- name: Kopiere fastd-blacklist.sh
+  copy: src=fastd-blacklist.sh dest=/etc/fastd/fastd-blacklist.sh mode=0500
+
+- name: Erstelle fastd Ordner
+  file: path=/etc/fastd/{{item.name}} state=directory
+  with_items: "{{fastd}}"
+
+- name: Erstelle Client fastd Config(s)
+  template: src=client.j2 dest=/etc/fastd/{{item.name}}/fastd.conf
+  with_items: "{{fastd}}"
+  when: item.type == "client"
+#  notify: Restart fastd
+
+- name: Erstelle Server fastd Config(s)
+  template: src=server.j2 dest=/etc/fastd/{{item.name}}/fastd.conf
+  with_items: "{{fastd}}"
+  when: item.type == "server"
+#  notify: Restart fastd
+
+- name: Checke ob Privatekey vorhanden ist
+  stat: path=/etc/fastd/secret.conf
+  register: fastd_private_key_exist
+
+- fail: msg="Bitte manuell Privatekey in /etc/fastd/secret.conf ablegen. Erstellen mit fastd --generate-key"
+  when: fastd_private_key_exist.stat.exists == False
