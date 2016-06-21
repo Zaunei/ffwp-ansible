@@ -9,6 +9,6 @@ iface bat0 inet6 manual
         post-up batctl -m $IFACE gw server {{batman.bandwidth}}
         {% endif -%}
         post-up echo 120 > /sys/class/net/$IFACE/mesh/hop_penalty
-        #post-up service alfred start
+        #post-up systemctl start alfred.service
         pre-down brctl delif br_ffwp $IFACE || true
         down ip link set $IFACE down
