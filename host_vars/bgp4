@@ -16,7 +16,6 @@ server_ipv4_nat: 185.66.195.19/32
 # !!!!In bird wird die Netzadresse benötigt, in if_lo /32
 ff_network_v6_ffrl_bgp_56: 2a03:2260:100d:0400::/56
 
-
 interfaces_direct:
 - interface: eth1
   v4_network: 10.198.120.146/31

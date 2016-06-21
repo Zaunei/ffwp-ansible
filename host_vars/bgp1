@@ -22,7 +22,6 @@ interfaces_direct:
   v6_network: 2a03:2260:100d:ff06::1/64
   v6_linklocal: fe80::1/64
 
-
 #GRE-Einstellungen zum Freifunk Rheinland
 #+1 auf Rheinland IP = unsere IP
 ffrl_gre:

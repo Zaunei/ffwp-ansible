@@ -59,9 +59,8 @@ protocol ospf IGP {
          interface "ffwp_*";
 	       interface "eth1";
 	       #Public Clientnetz
-         #todo: sinnvoller lösen (/64 nicht manuell angeben)
-	       stubnet {{interface_br_ffwp.v6_public_network | ipaddr ('network')}}/64;
-         stubnet {{interface_br_ffwp.v6_ula_network | ipaddr ('network')}}/64;
+	       stubnet {{ [ff_network_v6_public_prefix, interface_br_ffwp.v6_suffix] | join | ipaddr('host/prefix') | ipaddr('subnet') }};
+         stubnet {{ [ff_network_v6_ula_prefix, interface_br_ffwp.v6_suffix] | join | ipaddr('host/prefix') | ipaddr('subnet') }};
 	       };
          import all;
          #Keine Routen von anderen Quellen per OSPF propagieren
