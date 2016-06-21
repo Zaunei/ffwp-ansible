@@ -14,8 +14,8 @@ function is_default() {
 
 function is_ffwp() {
     return net ~ [
-    {{ff_network.v6_ffrl_48 | ipaddr}}{48,64},
-    {{ff_network.v6_ula_48 | ipaddr}}{48,64}
+    {{ff_network_v6_ffrl_48 | ipaddr}}{48,64},
+    {{ff_network_v6_ula_48 | ipaddr}}{48,64}
     ];
 }
 

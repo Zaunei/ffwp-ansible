@@ -3,10 +3,10 @@
 - name: Create interfaces - br_ffwp
   template: src="br_ffwp.j2" dest="/etc/network/interfaces.d/50_br_ffwp.cfg"
   notify:
-    - restart networking
+#    - restart networking
 
 #append line in interfaces file for reading additional config files
 - name: let read interfaces from interfaces
   lineinfile: dest="/etc/network/interfaces" line="source /etc/network/interfaces.d/*"
   notify:
-    - restart networking
+#    - restart networking

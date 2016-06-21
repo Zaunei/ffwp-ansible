@@ -16,14 +16,14 @@ roa table icvpn_roa {
 
 function is_ffwp_ffrl_nets() {
   return net ~ [
-  {{ff_network.v6_ffrl_48 | ipaddr}}{48,64}
+  {{ff_network_v6_ffrl_48 | ipaddr}}{48,64}
   ];
 }
 
 function is_ffwp() {
     return net ~ [
-    {{ff_network.v6_ffrl_48 | ipaddr}}{48,64},
-    {{ff_network.v6_ula_48 | ipaddr}}{48,64}
+    {{ff_network_v6_ffrl_48 | ipaddr}}{48,64},
+    {{ff_network_v6_ula_48 | ipaddr}}{48,64}
     ];
 }
 
@@ -118,9 +118,9 @@ protocol pipe pipe_main_icvpn {
 #IPv6 Netze die announced werden sollen
 protocol static ffrl_uplink_hostroute {
     table ffrl;
-    route {{ff_network.v6_ffrl_48 | ipaddr}} reject;
-    route {{ff_network.v6_ffrl_00_56 | ipaddr}} reject;
-    route {{ff_network.v6_ffrl_bgp_56 | ipaddr}} reject;
+    route {{ff_network_v6_ffrl_48 | ipaddr}} reject;
+    route {{ff_network_v6_ffrl_00_56 | ipaddr}} reject;
+    route {{ff_network_v6_ffrl_bgp_56 | ipaddr}} reject;
 }
 
 protocol kernel kernel_ffwp {
@@ -214,7 +214,7 @@ protocol ospf IGP {
 # Uplink über ff Rheinland
 template bgp ffrl_uplink {
         table ffrl;
-        local as {{ff_network.as_number}};
+        local as {{ff_network_as_number}};
         import limit 10000;
         import keep filtered;
         import filter {
@@ -236,7 +236,7 @@ template bgp icvpn_tinc {
     import limit 10000;
 	  import keep filtered;
     source address {{icvpn.ipv6 | ipaddr ('address')}};
-    local as {{ff_network.as_number}};
+    local as {{ff_network_as_number}};
     import filter {
       if (is_default()) then {
 			print "ASN ", bgp_path.last, " announces default route (via ", proto ,")";
@@ -268,9 +268,9 @@ template bgp icvpn_tinc {
 template bgp internal {
         table ibgp;
         source address {{router_v6_ip | ipaddr('address')}};
-        local as {{ff_network.as_number}};
+        local as {{ff_network_as_number}};
         import filter {
-                bgp_path.prepend({{ff_network.as_number}});
+                bgp_path.prepend({{ff_network_as_number}});
                 preference = 99;
                 accept;
         };
@@ -287,7 +287,7 @@ template bgp internal {
 {% for host in groups['bgp'] %}
 {% if  hostvars[host]['inventory_hostname'] is not equalto inventory_hostname %}
 protocol bgp internal_{{ hostvars[host]['inventory_hostname'] }} from internal {
-  neighbor {{ hostvars[host]['router_v6_ip'] | ipaddr('address')}} as {{ff_network.as_number}};
+  neighbor {{ hostvars[host]['router_v6_ip'] | ipaddr('address')}} as {{ff_network_as_number}};
 };
 {% endif %}
 {% endfor %}

@@ -5,8 +5,6 @@ public_v6: 2001:bc8:225e:1001::151
 router_ip: 10.198.16.1/32
 gw_subnet: 10.198.16.0/21
 
-backports_kernel: false
-
 #interface_br_ffwp:
 #  #Bald mal auf /17 umbauen
 #  v4_network: 10.198.??.?/16

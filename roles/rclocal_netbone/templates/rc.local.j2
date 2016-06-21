@@ -68,12 +68,12 @@
 #Ausgehende Pakete die über Exit sollen mit Source IP matchen und in richtige Tabelle schieben
 #sonst würden z.B ICMP Echo-Replys über normale Default Route gehen
 /sbin/ip -4 rule add from {{server_ipv4_nat | ipaddr}} table 42 priority 51 || true
-/sbin/ip -6 rule add from {{ff_network.v6_ffrl_48 | ipaddr}} table 42 priority 51 || true
+/sbin/ip -6 rule add from {{ff_network_v6_ffrl_48 | ipaddr}} table 42 priority 51 || true
 
 #Nochmal ganz auf Nummer sicher gehen
-/sbin/ip -4 rule add unreachable from {{ff_network.v4_network | ipaddr}} priority 52 || true
-/sbin/ip -6 rule add unreachable from {{ff_network.v6_ffrl_48 | ipaddr}} priority 52 || true
-/sbin/ip -6 rule add unreachable from {{ff_network.v6_ula_48 | ipaddr}} priority 53 || true
+/sbin/ip -4 rule add unreachable from {{ff_network_v4_network | ipaddr}} priority 52 || true
+/sbin/ip -6 rule add unreachable from {{ff_network_v6_ffrl_48 | ipaddr}} priority 52 || true
+/sbin/ip -6 rule add unreachable from {{ff_network_v6_ula_48 | ipaddr}} priority 53 || true
 
 #schicke Uplink keine Packete mit dennen er nichts anfangen können
 #https://en.wikipedia.org/wiki/Reserved_IP_addresses

@@ -215,7 +215,7 @@ protocol ospf IGP {
 # Uplink über ff Rheinland
 template bgp ffrl_uplink {
         table ffrl;
-        local as {{ff_network.as_number}};
+        local as {{ff_network_as_number}};
         import limit 10000;
         import keep filtered;
         import filter {
@@ -236,9 +236,9 @@ template bgp ffrl_uplink {
 template bgp internal {
         table ibgp;
         source address {{router_ip | ipaddr('address')}};
-        local as {{ff_network.as_number}};
+        local as {{ff_network_as_number}};
         import filter {
-                bgp_path.prepend({{ff_network.as_number}});
+                bgp_path.prepend({{ff_network_as_number}});
                 preference = 99;
                 accept;
         };
@@ -254,7 +254,7 @@ template bgp icvpn_tinc {
     import limit 10000;
     import keep filtered;
     source address {{icvpn.ipv4 | ipaddr ('address')}};
-    local as {{ff_network.as_number}};
+    local as {{ff_network_as_number}};
     import filter {
       if (is_default()) then {
 			print "ASN ", bgp_path.last, " announces default route (via ", proto ,")";
@@ -287,7 +287,7 @@ template bgp icvpn_tinc {
 {% for host in groups['bgp'] %}
 {% if  hostvars[host]['inventory_hostname'] is not equalto inventory_hostname %}
 protocol bgp internal_{{ hostvars[host]['inventory_hostname'] }} from internal {
-  neighbor {{ hostvars[host]['router_ip'] | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }} as {{ff_network.as_number}};
+  neighbor {{ hostvars[host]['router_ip'] | regex_replace("^(\d+\.\d+\.\d+\.\d+)/\d+$","\\1") }} as {{ff_network_as_number}};
 };
 {% endif %}
 {% endfor %}

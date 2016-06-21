@@ -48,7 +48,7 @@ protocol ospf IGP {
         interface "ffwp_*";
 	interface "eth1";
 	#Clientnetz als ganzes
-	stubnet {{ff_network.v4_network}};
+	stubnet {{ff_network_v4_network}};
 	#Subnetz vom GW
 	stubnet {{gw_subnet}};
 	};

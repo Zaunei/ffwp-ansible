@@ -14,6 +14,8 @@ router_ip: 10.198.120.17/32
 router_v6_ip: 2a03:2260:100d:0200::1/64
 server_ipv4_nat: 185.66.194.19/32
 # !!!!In bird wird die Netzadresse benötigt, in if_lo /32
+ff_network_v6_ffrl_bgp_56: 2a03:2260:100d:0200::/56
+
 
 interfaces_direct:
 - interface: eth1
