@@ -16,4 +16,5 @@ iface br_ffwp inet static
         address {{interface_br_ffwp.v4_network | ipaddr ('address')}}
         netmask {{interface_br_ffwp.v4_network | ipaddr ('netmask')}}
         post-up brctl addif $IFACE bat0
+        post-up ip link set $IFACE address {{ batman.mac }}
         pre-down brctl delif $IFACE bat0

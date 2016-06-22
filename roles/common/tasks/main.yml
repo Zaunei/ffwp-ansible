@@ -60,12 +60,14 @@
 
 - name: install backports-kernel
   apt:
+    default_release: jessie-backports
     pkg: "{{ item }}"
     update_cache: yes
     state: present
   with_items:
-    - linux-image-4.5.0-0.bpo.2-amd64
-    - linux-headers-4.5.0-0.bpo.2-amd64
+    - linux-image-4.6.0-0.bpo.1-amd64
+    - linux-headers-4.6.0-0.bpo.1-amd64
+    # ggf. linux-image
   when: backports_kernel
 
 - name: Aktiviere IPv4 Forwarding
